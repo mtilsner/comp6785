@@ -1,0 +1,29 @@
+\section{Briefly describe your plans for your project. Note that your project should include some elements that are novel or interesting. These may be related to the visual representations, interaction techniques, or data processing needs of the target domain.}
+
+\subsection{Introduction}
+Current progress in research literature fails to provide a model for visualization that is both highly usable and efficient. Target users for web search interfaces are mainly untrained users with partially little understanding of computer science and even less understanding of information visualization. A few truths have to be kept in mind when constructing a visualization:
+\begin{itemize}
+	\item Performing web search is a subordinate task for users.
+	\item	Users will not be willing to spend much time on subordinate
+				tasks.
+	\item The level of utilization will differ from user to user.
+\end{itemize}
+These truths result in a number of consequences:
+\begin{itemize}
+	\item Search visualization must be intuitive.
+	\item Search visualization must be fast.
+	\item Search visualization must be flexible.
+\end{itemize}
+Last, of course, the visualization must provide some benefit to search in respect to the current visualization. I believe that no current research incorporates all of these three consequences. 
+
+\subsection{Visualization Encoding}
+Search results are an unlimited amount of objects. However, users are unable to comprehend more than 7 objects at a time. Shneiderman therefore suggests a overview-zoom-detail concept for large data sets in \cite{Shneiderman1996}. In my project, I aim to implement this concept. Existing literature already provides a number of algorithms for clustering search results, each representing different topics. The solutions, however, either map all results into a big map with different areas representing the different topics or display a vast amount of areas in different layers. \\
+I propose the identification of only 5-7 high hierarchy topics. All result items relevant to a specific topic is assigned to it. This may result in a result item being assigned to more than one topic at the same time. As a query response, the user is only presented with overviews of these different topics (the exact nature of these overviews has to be determined, but I'm thinking of an interpolated topic title, number of hits, plus maybe one or two suggested links). One distinct color hue is assigned to each topic. This topic assignment is especially helpful for search terms that have more than one semantic domain such as ``Java'' or ``Jobs''. \\
+Upon selecting a topic the user is presented with the list of result items assigned to it. The result items are ordered by relevance to the general search term combined with the original ranking (how exactly has to be identified). In order to visualize the relevance I propose a HotMap-like color encoding using colored squares. The Hue of the color is already defined by the topic. Either the brightness or the saturation can now be used for encoding the relevance. \\
+Upon selecting a result item, the user is presented with a brief overview of the document content and possibly metadata (this is another issue that is to be examined). With these three layers of information visualization, the user can easily narrow down his search and identify relevant result items.
+
+\subsection{Visualization Interaction}
+Next to performing the drill-down analysis elaborated above by selecting topics and later on individual result items, I propose to allow a more elaborated query refinement. Current research always proposes adding or removing relevant keywords to a search term. I suggest a filtering of the already fetched result items. Instead of performing another query, the user can simply define simple filters that reduce the list of result items immediately at runtime to those containing the filter value. Another option would be to assign weights to the individual search terms thus identifying how much relevant they are for gaining the desired result.
+
+\subsection{Future Work}
+Future work would be the construct of a search canvas. Users could be allowed to drag\&drop result items to a specific canvas. On this canvas, connecting lines could be used to show how documents are related to each other using their links. Additionally, users should be allowed to store these canvases and be provided with a RESTful link. This way, result item maps can be easily retrieved, shared, refined, and reused. An additional programming API would furthermore increase the reusability of the search interface. While the primary implementation would probably use only one specific web search API, the final product should aim to query multiple providers. The number of occurrences and rank of a result items in the different result lists of these providers could be used inside the internal ranking.

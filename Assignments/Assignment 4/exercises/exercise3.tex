@@ -1,0 +1,23 @@
+\section{Briefly summarize what you believe are the four most important perceptual
+cues that allow us to perceive that objects exist in 3-dimensional space even when
+viewed on a 2-dimensional display. Justify why these four are more important than the
+others.}
+
+The following perceptual cues exist:
+\begin{description}
+	\item[monocular static]:
+				\emph{linear perspective, texture gradient, size gradient, occlusion, depth of focus, cast shadows, shape-from-shading}
+  \item[monocular dynamic]:
+  			\emph{structure-from-motion}
+	\item[binocular]:
+				\emph{steroscopic depth}
+	\item[artifical]:
+				\emph{dropping lines to a ground plane, proximity luminance covariance}
+\end{description}
+I believe that the four most relevant cues are \emph{linear perspective}, \emph{occlusion}, \emph{cast shadows}, and \emph{shade-from-shading} for the following reasons: Both monocular dynamic and binocular require very specific visualization methods. Monocular static clues, however, can be applied to any visualization. They work with monocular and binocular methods as well as with static and dynamic ones. Therefore, monocular static clues should be preferred.
+
+\emph{Dropping lines to a ground} is a technique that is very similar to \emph{cast shadows}. It too aids in the perception of the correct positioning inside a 3D space. In contrast to \emph{cast shadows}, however, it uses an artificial visualization technique. A shadow is a natural phenomenon that is instinctively perceived and decoded by a human, thus promoting preattentive processing. Dropping lines, however, require active attention for a correct decoding since they are non-natural, artificial constructs.
+
+\emph{Texture gradient}, \emph{proximity luminance covariance}, and \emph{size gradient} modify the actual look of items displayed. Neither size, nor texture, nor luminance are purely artificial presentation attributes, but depend on the item that is actually displayed. Making these attributes dependent on position and shape within a 3D space would falsify the item perception. For the display of real items, this might result in compromising the perception of items. In case of artificial items encoding data, these attributes are usually used for encoding information. By using them for generating a 3D perception, the encoding domains are lost. \emph{Depth of focus} does provide an encoding of the relative distance of items to the viewer. However, by blurring items, valuable information encoded might be get lost due to limited recognizability of the items.
+
+\emph{Linear perspective} on the other side allows the perception of a 3D positioning by looking at a 2D display. It actually adds one domain available for encoding information (the third dimension). \emph{Cast shadows} aids in the correct perception of the dimensions. By dropping a shadow to a common plane, different items can be brought in context to one another more easily. \emph{Occlusion} is one of the most powerful encoding techniques. It encodes the relative distance of items to a specific point of view. In the human mind, information encoded using \emph{occlusion} actually dominates other encodings such as \emph{stereoscopic depth} as elaborated in \cite{Ware2004}. \emph{Shape-from-shading} effectively encodes the 3D shape of the item displayed. For real items displayed, this encoding will be automatically provided. For artificial encodings in InfoVis applications, this allows the utilization of not only 2D shapes, but extends to domain to 3D shapes.
