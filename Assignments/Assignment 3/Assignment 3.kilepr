@@ -1,0 +1,80 @@
+[General]
+img_extIsRegExp=false
+img_extensions=.eps .pdf .dvi .ps .fig .gif .jpg .jpeg .png
+kileprversion=1
+kileversion=1.9.3
+lastDocument=exercises/exercise2.tex
+masterDocument=
+name=Assignment 3
+pkg_extIsRegExp=false
+pkg_extensions=.cls .sty .dtx
+src_extIsRegExp=false
+src_extensions=.tex .ltx .bib .mp
+
+[Tools]
+MakeIndex=
+QuickBuild=
+
+[item:../additional literature]
+archive=true
+column=201
+encoding=ISO 8859-1
+highlight=None
+line=0
+open=true
+
+[item:../assignmentTemplate.tex]
+archive=true
+column=0
+encoding=ISO 8859-1
+highlight=LaTeX
+line=24
+open=true
+
+[item:Assignment 3.kilepr]
+archive=true
+column=2097268
+encoding=
+highlight=
+line=0
+open=false
+
+[item:Assignment 3.tex]
+archive=true
+column=2424948
+encoding=
+highlight=
+line=0
+open=false
+
+[item:exercises/exercise1.tex]
+archive=true
+column=1128
+encoding=
+highlight=LaTeX
+line=14
+open=true
+
+[item:exercises/exercise2.tex]
+archive=true
+column=72
+encoding=ISO 8859-1
+highlight=LaTeX
+line=7
+open=true
+
+[item:exercises/exercise3.tex]
+archive=true
+column=554
+encoding=
+highlight=LaTeX
+line=9
+open=true
+
+[item:literature.bib]
+archive=true
+column=80
+encoding=ISO 8859-1
+highlight=BibTeX
+line=532
+open=true

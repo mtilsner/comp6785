@@ -1,0 +1,32 @@
+\section{Briefly summarize how the type of data affects the set techniques available for generating an effective visual representation of the data.}
+
+The type of the data that is to be visualized is a collection of plain text documents with links among each other. Therefore, the following points of interest arise. Each point of interest represents one attribute of the information to display:
+\begin{enumerate}
+	\item How relevant is a document in respect to a specific search term
+	\item How relevant is a document in respect to all search terms
+	\item How are documents related to one another?
+	\item What topics does a document cover
+\end{enumerate}
+Both 1 and 2 are ordinal attributes. \cite{Bertin1967} suggests using size, brightness (here the brightness is called ``value''), and texture for encoding them. \cite{Mackinlay2086} furthermore proposes position, saturation, and color hue. Attributes 3 and 4 are nominal, representing an association and a selection respectively (brightness is here refered to as ``density''). While \cite{Bertin1967} proposes texture, color, shape, and orientation for encoding of attribute 3 and size, texture, value, and color for 4, position, color, texture, containment, and connection are listed in \cite{Mackinlay2086} for both. Length, slope, and angle are never proposed for encoding information. Furthermore, no quantitative encoding type is required. Table \ref{table:attributeEncodings} summarizes these findings. Obviously, there are different ways for encoding each attribute. Furthermore, most encodings are ambiguous. Consequently, no encoding-attribute association is impelled. All associations can be freely determined.
+\begin{table}[ht]
+	\centering
+		\begin{tabular}{l|cccc}
+										& Attribute 1 & Attribute 2 & Attribute 3 & Attribute 4 \\
+			\hline
+		  position 		  &		 	 x			&			 x			&		   x			&			 x			\\
+			length				&							&							&							&							\\
+			angle					&							&							&							&							\\
+			slope					&							&							&							&							\\
+			area / volume	& 		 x			&			 x			&							&			 x			\\
+			orientation		&							&							&			 x			&							\\
+			brightness		& 		 x			&			 x			&							&							\\
+			saturation		& 		 x			&			 x			&							&							\\
+			color hue			& 		 x			&			 x			&			 x			&			 x			\\
+			texture				& 		 x			&			 x			&			 x			&			 x			\\
+			connection		&							&							&			 x			&			 x			\\
+			containment		&						  &							&			 x			&			 x			\\
+			shape		  		&							&							&			 x			&							\\
+		\end{tabular}
+	\caption{Possible visualization encodings for the four different attributes}
+	\label{table:attributeEncodings}
+\end{table}
