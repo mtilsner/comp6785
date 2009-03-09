@@ -1,0 +1,5 @@
+\beamer@endinputifotherversion {3.07pt}
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@sectionintoc {2}{Analysis}{4}{0}{2}
+\beamer@sectionintoc {3}{Conclusion}{6}{0}{3}
+\beamer@sectionintoc {4}{Approach}{8}{0}{4}

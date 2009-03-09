@@ -1,15 +1,15 @@
 [General]
 img_extIsRegExp=false
-img_extensions=.eps .pdf .dvi .ps .fig .gif .jpg .jpeg .png
-kileprversion=1
-kileversion=1.9.3
-lastDocument=exercises/exercise2.tex
+img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif .dvi
+kileprversion=2
+kileversion=2.0
+lastDocument=Assignment 3.tex
 masterDocument=
 name=Assignment 3
 pkg_extIsRegExp=false
-pkg_extensions=.cls .sty .dtx
+pkg_extensions=.cls .sty
 src_extIsRegExp=false
-src_extensions=.tex .ltx .bib .mp
+src_extensions=.tex .ltx .latex .dtx .ins .bib .mp
 
 [Tools]
 MakeIndex=
@@ -17,11 +17,12 @@ QuickBuild=
 
 [item:../additional literature]
 archive=true
-column=201
+column=0
 encoding=ISO 8859-1
 highlight=None
 line=0
-open=true
+open=false
+order=-1
 
 [item:../assignmentTemplate.tex]
 archive=true
@@ -29,7 +30,8 @@ column=0
 encoding=ISO 8859-1
 highlight=LaTeX
 line=24
-open=true
+open=false
+order=-1
 
 [item:Assignment 3.kilepr]
 archive=true
@@ -38,14 +40,16 @@ encoding=
 highlight=
 line=0
 open=false
+order=-1
 
 [item:Assignment 3.tex]
 archive=true
-column=2424948
+column=20
 encoding=
-highlight=
-line=0
-open=false
+highlight=LaTeX
+line=2
+open=true
+order=1
 
 [item:exercises/exercise1.tex]
 archive=true
@@ -53,7 +57,8 @@ column=1128
 encoding=
 highlight=LaTeX
 line=14
-open=true
+open=false
+order=-1
 
 [item:exercises/exercise2.tex]
 archive=true
@@ -61,20 +66,23 @@ column=72
 encoding=ISO 8859-1
 highlight=LaTeX
 line=7
-open=true
+open=false
+order=-1
 
 [item:exercises/exercise3.tex]
 archive=true
-column=554
+column=28
 encoding=
 highlight=LaTeX
-line=9
-open=true
+line=6
+open=false
+order=-1
 
 [item:literature.bib]
 archive=true
-column=80
-encoding=ISO 8859-1
+column=16
+encoding=UTF-8
 highlight=BibTeX
-line=532
+line=520
 open=true
+order=0
