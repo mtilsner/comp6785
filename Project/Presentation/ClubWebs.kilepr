@@ -17,9 +17,18 @@ QuickBuild=
 
 [item:ClubWebs.tex]
 archive=true
-column=15
+column=30
 encoding=UTF-8
 highlight=LaTeX
-line=14
-open=false
+line=238
+open=true
 order=0
+
+[item:literature.bib]
+archive=true
+column=27
+encoding=UTF-8
+highlight=BibTeX
+line=22
+open=true
+order=1
