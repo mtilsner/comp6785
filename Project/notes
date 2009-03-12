@@ -1,0 +1,41 @@
+Project
+  - Search Result Fetching
+    => popularity based (http://searchenginewatch.com/3632382)
+    - Google API	(restricted)
+    - Yahoo API		(open)			<--
+    - MSN API
+    - AOP API
+    - Ask.com API
+
+  - Clustering
+    => existing APIs, future change possible
+    - Weka [GPL] (http://www.cs.waikato.ac.nz/~ml/weka/)
+      (http://www.5th-row.com/weka/wakka.php?wakka=Index)
+      * FuzzyKMeans			    {administration}
+      * FuzzyGK                             {administration}
+      => maximum 4 clusters (4 base colors) {administration}
+	- amount of clusters fixed? or dynamic?
+    - JDM [N/A] 
+    - RapidMiner 
+      => benutzt intern Weka algorithmen
+
+  - Topic Identification
+    - Wiki-Articles?
+    - Most Common Words outside Search Query
+
+  - Rendering
+    - specific color hue to each cluster [rbgy]
+    - list
+    - rendering of only 1,5-2 screens
+
+  - Browsing
+    - overview... link or image?
+    - additional items while scrolling (retrieval from SE)?
+    - ajax update
+
+  - Canvas Update
+    - ajax update
+    - rerendering of whole canvas
+      => maximum canvas size?
+      => canvas size displayed in collapsed state?
+    - technology for connecting lines & drag and drop?
