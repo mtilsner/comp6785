@@ -15,6 +15,13 @@ import java.util.List;
 public interface Search {
 	
 	/**
+	 * Determines how many results will be fetched with each request.
+	 * 
+	 * @return The number of results.
+	 */
+	public abstract int getFetchBlockSize();
+	
+	/**
 	 * Evaluates how many results exist in total for a specific search.
 	 * 
 	 * @return The number of existing results

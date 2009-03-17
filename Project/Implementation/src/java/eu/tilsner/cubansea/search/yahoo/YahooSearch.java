@@ -3,14 +3,13 @@ package eu.tilsner.cubansea.search.yahoo;
 import eu.tilsner.cubansea.search.SearchResult;
 import eu.tilsner.cubansea.search.Search;
 import eu.tilsner.cubansea.search.SearchEngineException;
+import eu.tilsner.cubansea.utilities.StringHelper;
 import eu.tilsner.cubansea.utilities.TechnicalError;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 
 import com.yahoo.search.SearchClient;
 import com.yahoo.search.SearchException;
@@ -28,9 +27,6 @@ import com.yahoo.search.WebSearchResults;
  * @author Matthias Tilsner
  */
 public class YahooSearch implements Search {
-
-	public static final int MAXIMUM_REQUEST_LOAD = 50;
-	public static final int FETCH_BLOCK_SIZE	 = MAXIMUM_REQUEST_LOAD;
 	
 	private String query;
 	private List<SearchResult> results = new ArrayList<SearchResult>();
@@ -45,7 +41,7 @@ public class YahooSearch implements Search {
      * @throws SearchEngineException The search engine cannot be initialized.
      */
     public YahooSearch(List<String> terms) {
-    	query = StringUtils.join(terms.toArray(), " ");
+    	query = StringHelper.join(terms, " ");
     }
 
 	/* (non-Javadoc)
@@ -55,7 +51,7 @@ public class YahooSearch implements Search {
     public List<SearchResult> getResults(int first, int count) {
 		int _last = Math.min(getResultCount(), first+count);
 		ensureResultsAreFetched(_last);
-    	return results.subList(first, _last);
+    	return results.subList(first, first+count);
     }
 
 	/* (non-Javadoc)
@@ -111,7 +107,15 @@ public class YahooSearch implements Search {
 	private WebSearchRequest createNextRequest() {
 		WebSearchRequest _request = new WebSearchRequest(query);
 		_request.setStart(BigInteger.valueOf(cacheStatus+1));					//Yahoo API starts index with 1, not with 0
-		_request.setResults(FETCH_BLOCK_SIZE);
+		_request.setResults(getFetchBlockSize());
 		return _request;
+	}
+
+	/* (non-Javadoc)
+	 * @see eu.tilsner.cubansea.search.Search#getFetchBlockSize()
+	 */
+	@Override
+	public int getFetchBlockSize() {
+		return 50;
 	}
 }
