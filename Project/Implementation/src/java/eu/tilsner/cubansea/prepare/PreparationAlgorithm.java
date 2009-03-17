@@ -1,4 +1,4 @@
-package eu.tilsner.cubansea.cluster;
+package eu.tilsner.cubansea.prepare;
 
 import java.util.List;
 
