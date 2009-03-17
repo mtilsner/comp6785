@@ -1,7 +1,9 @@
 package eu.tilsner.cubansea.cluster;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+
+import eu.tilsner.cubansea.prepare.PreparedResult;
 
 /**
  * Abstract interface for clustering algorithms.
@@ -18,6 +20,17 @@ public interface ClusteringAlgorithm {
 	 * @param numberOfClusters The number of clusters that shall be created.
 	 * @return The set of clusters.
 	 */
-	public Set<Cluster> createClusters(List<PreparedResult> items, int numberOfClusters);
+	public Collection<Cluster> createClusters(List<PreparedResult> items, int numberOfClusters);
+
+	
+	/**
+	 * Calculates the relevances of an item to a collection of cluster centroids.
+	 * This method is required when adding additional results to an already existing
+	 * 
+	 * @param centroids The centroids of a collection of clusters.
+	 * @param item The item for which the relevances shall be determined.
+	 * @return A map of the relevances assigned to the specific centroids. 
+	 */
+	public Collection<Cluster> addItemToClusters(Collection<Cluster> clusters, PreparedResult item);
 
 }

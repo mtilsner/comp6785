@@ -1,26 +1,27 @@
 package eu.tilsner.cubansea.cluster;
 
+import eu.tilsner.cubansea.prepare.PreparedResult;
+
 /**
  * This is a wrapper class for clustered search results.
  * 
  * @author Matthias Tilsner
  *
  */
-public interface ClusteredResult extends PreparedResult {
+public interface ClusteredResult {
 
 	/**
-	 * Determines the rank the result has inside a specific cluster.
+	 * The prepared result this clustered result was created for.
 	 * 
-	 * @param cluster The cluster for which the rank shall be determined.
-	 * @return The rank (starting with 1).
+	 * @return The prepared result wrapped by this class.
 	 */
-	public int getRank(Cluster cluster);
+	public PreparedResult getPreparedResult();
 	
 	/**
 	 * Determines how relevant the result is for a a specific cluster (in percent).
 	 * 
 	 * @param cluster The cluster for which the relevance shall be determined.
-	 * @return The relevance in percent (0.0 - 100.0).
+	 * @return The relevance in percent (0.0 - 1.0).
 	 */
 	public double getRelevance(Cluster cluster);
 	
