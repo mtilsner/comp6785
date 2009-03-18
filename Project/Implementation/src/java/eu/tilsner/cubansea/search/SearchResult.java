@@ -11,7 +11,7 @@ import java.util.Set;
  * @author Matthias Tilsner
  */
 public interface SearchResult {
-	
+
 	/**
 	 * Gets the rank of the result fetched.
 	 * 

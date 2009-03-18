@@ -20,8 +20,10 @@ import eu.tilsner.cubansea.utilities.StringHelper;
  */
 public class SimpleFuzzyKMeansCluster implements Cluster {
 
-	private List<ClusteredResult> results;
-	private Map<String,Double>	  centroidAttributes;
+	private static final int		NUMBER_TOPIC_TERMS = 8;
+	
+	private List<ClusteredResult>	results;
+	private Map<String,Double>		centroidAttributes;
 	
 	/* (non-Javadoc)
 	 * @see eu.tilsner.cubansea.cluster.Cluster#addResult(eu.tilsner.cubansea.cluster.ClusteredResult)
@@ -77,11 +79,11 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 		Collections.sort(_attributes, new Comparator<Map.Entry<String,Double>>(){
 			@Override
 			public int compare(Map.Entry<String, Double> item1, Map.Entry<String, Double> item2) {
-				return (int) (item2.getValue() - item1.getValue())*5;
+				return (int) ((item2.getValue() - item1.getValue())*5.0);
 			}
 			
 		});
-		int _last = Math.min(3, _attributes.size());
+		int _last = Math.min(NUMBER_TOPIC_TERMS, _attributes.size());
 		List<String> _keyWords = new ArrayList<String>();
 		for(Map.Entry<String,Double> _attribute: _attributes.subList(0, _last)) {
 			_keyWords.add(_attribute.getKey());
@@ -100,9 +102,17 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 		Collections.sort(results, new Comparator<ClusteredResult>(){
 			@Override
 			public int compare(ClusteredResult item1, ClusteredResult item2) {
-				return (int) (item2.getRelevance(_cluster) - item2.getRelevance(_cluster))*5;
+				return (int) ((item2.getRelevance(_cluster) - item2.getRelevance(_cluster))*5.0);
 			}
 		});
+	}
+
+	/* (non-Javadoc)
+	 * @see eu.tilsner.cubansea.cluster.Cluster#getMaximumRelevance()
+	 */
+	@Override
+	public double getMaximumRelevance() {
+		return results.get(0).getRelevance(this);
 	}
 
 	/**
@@ -113,7 +123,7 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 	 */
 	public SimpleFuzzyKMeansCluster(List<ClusteredResult> _results, Map<String,Double> _attributes) {
 		centroidAttributes = _attributes;
-		results = _results;
+		results = (_results == null) ? new ArrayList<ClusteredResult>() : _results;
 		sort();
 	}
 }

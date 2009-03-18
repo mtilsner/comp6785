@@ -9,7 +9,7 @@ package eu.tilsner.cubansea.search;
  * @author Matthias Tilsner
  */
 public class SearchResultException extends Exception {
-
+	
 	private static final long serialVersionUID = -784689440699787069L;
 
 	public SearchResultException(String message) {

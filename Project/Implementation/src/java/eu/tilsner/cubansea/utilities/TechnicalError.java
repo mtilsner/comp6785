@@ -13,7 +13,7 @@ public class TechnicalError extends Error {
 	public TechnicalError(String message) {
 		super(message);
 	}
-	
+
 	public TechnicalError(Throwable e) {
 		super(e);
 	}

@@ -58,7 +58,7 @@ public class PotterSummaryPreparationAlgorithm implements PreparationAlgorithm {
 			if(_results.containsKey(_word))
 				_results.put(_word, _results.get(_word)+1);
 			else
-				_results.put(_word, 0.0);
+				_results.put(_word, 1.0);
 		}
 		return _results;
 	}
@@ -86,6 +86,9 @@ public class PotterSummaryPreparationAlgorithm implements PreparationAlgorithm {
 	 * @return A filtered list of the words to be considered.
 	 */
 	private List<String> getWords(String content) {
+		if(content == null) return new ArrayList<String>();
+		content = content.replaceAll(PreparedResult.INVALID_CHARACTER_PATTERN, " ");
+		content = content.replaceAll("\\s+", " ");
 		List<String> _words = StringHelper.split(content, " ");
 		return filterWords(_words);
 	}
@@ -101,7 +104,8 @@ public class PotterSummaryPreparationAlgorithm implements PreparationAlgorithm {
 	private List<String> filterWords(List<String> words) {
 		List<String> _filtered = new ArrayList<String>();
 		for(String _word: words) {
-			if(_word.length() > PreparedResult.IGNORED_WORD_LENGTH && PreparedResult.IGNORED_WORDS.contains(_word))
+			_word = _word.toLowerCase();
+			if(_word.length() > PreparedResult.IGNORED_WORD_LENGTH && !PreparedResult.IGNORED_WORDS.contains(_word))
 				_filtered.add(_word);
 		}
 		return _filtered;

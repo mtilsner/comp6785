@@ -22,7 +22,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
  * @author Matthias Tilsner
  */
 public class HTMLHelper {
-	
+
 	/**
 	 * Fetches an HTML document accessible under a specific URL.
 	 * It uses the Apache HTTP Client library.

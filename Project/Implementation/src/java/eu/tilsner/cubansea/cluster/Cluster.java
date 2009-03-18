@@ -13,7 +13,7 @@ import eu.tilsner.cubansea.prepare.PreparedResult;
  *
  */
 public interface Cluster {
-	
+
 	/**
 	 * Returns a dummy prepared result representing the centroid of
 	 * the cluster.
@@ -65,4 +65,11 @@ public interface Cluster {
 	 * Sorts the results inside a cluster.
 	 */
 	public void sort();
+
+	/**
+	 * Returns the relevance of the rsult best fitting this cluster.
+	 *
+	 * @return The relevacne value
+	 */
+	public double getMaximumRelevance();
 }

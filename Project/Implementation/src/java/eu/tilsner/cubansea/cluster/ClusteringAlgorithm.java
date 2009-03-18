@@ -11,7 +11,7 @@ import eu.tilsner.cubansea.prepare.PreparedResult;
  * @author Matthias Tilsner
  */
 public interface ClusteringAlgorithm {
-	
+
 	/**
 	 * Creates a set of clusters based on an ordered list of results. The number of clusters
 	 * to be created has to be specified.

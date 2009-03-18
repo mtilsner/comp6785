@@ -9,7 +9,7 @@ public class StringHelper {
 	public static String join(List<String> words, String separator) {
 		return StringUtils.join(words, separator);
 	}
-	
+
 	public static List<String> split(String content, String separator) {
 		return Arrays.asList(StringUtils.split(content, separator));
 	}

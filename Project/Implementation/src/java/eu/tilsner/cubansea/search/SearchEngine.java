@@ -9,7 +9,7 @@ import java.util.List;
  * @author Matthias Tilsner
  */
 public interface SearchEngine {
-	
+
 	/**
 	 * Creates a new search based on a specific list of search terms.
 	 * @param searchTerms List of search terms.

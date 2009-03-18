@@ -13,7 +13,7 @@ import java.util.List;
  * @author Matthias Tilsner
  */
 public interface Search {
-	
+
 	/**
 	 * Determines how many results will be fetched with each request.
 	 * 

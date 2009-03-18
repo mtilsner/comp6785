@@ -26,10 +26,15 @@ public interface PreparedResult {
 	 * frequencies.
 	 */
 	public static final List<String> IGNORED_WORDS = Arrays.<String>asList(
-		"therefor", "thus", "hence", "because", "since", "consequently",
-		"however", "though" 
+		"therefor", "thus", "hence", "because", "since", "consequently", "however", "though", "while", "until", 
+		"from"
 	);
 	
+	/**
+	 * Pattern matching all characters that must be deleted from words.
+	 */
+	public static final String INVALID_CHARACTER_PATTERN = "[^a-zA-Zäöüß]+";
+
 	/**
 	 * The search result this prepared result was created for.
 	 * 
