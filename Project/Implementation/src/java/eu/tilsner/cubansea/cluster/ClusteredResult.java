@@ -18,6 +18,15 @@ public interface ClusteredResult {
 	public PreparedResult getPreparedResult();
 	
 	/**
+	 * Evaluates the absolute relevance for a specific cluster, which is the
+	 * similarity of the item to the cluster.
+	 * 
+	 * @param cluster The cluster for which the absolute relevance is to be determined.
+	 * @return The absolute relevance value.
+	 */
+	public double getAbsoluteRelevance(Cluster cluster);
+	
+	/**
 	 * Determines how relevant the result is for a a specific cluster (in percent).
 	 * 
 	 * @param cluster The cluster for which the relevance shall be determined.

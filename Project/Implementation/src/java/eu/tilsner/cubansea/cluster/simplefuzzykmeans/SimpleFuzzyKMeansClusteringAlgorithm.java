@@ -22,7 +22,6 @@ import eu.tilsner.cubansea.prepare.PreparedResult;
 public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm {
 
 	private static final int MAXIMUM_ITERATIONS 		   = 10;
-	private static final double FUZZYNESS				   = 1.0;
 	private static final double MINUMUM_ITERATION_PROGRESS = 0.5;
 	
 	private Map<PreparedResult,Map<Integer,Double>> oldMemberships;
@@ -30,6 +29,7 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	private Map<Integer,PreparedResult>				centroids;
 	private Collection<String>						attributes;
 	private int										iterations;
+	private double 									sensitivity;
 	
 	/* (non-Javadoc)
 	 * @see eu.tilsner.cubansea.cluster.ClusteringAlgorithm#createClusters(java.util.List, int)
@@ -39,22 +39,12 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 		initialize(items, Math.min(numberOfClusters,items.size()));
 		while(!satisfied()) iterate();
 		Collection<Cluster> _clusters = new HashSet<Cluster>();
-		Map<Integer,Cluster> _clMapping = new HashMap<Integer,Cluster>();
 		for(Map.Entry<Integer,PreparedResult> _centroid: centroids.entrySet()) {
 			Cluster _cluster = new SimpleFuzzyKMeansCluster(null, _centroid.getValue().getAllFrequencies());
 			_clusters.add(_cluster);
-		        _clMapping.put(_centroid.getKey(), _cluster);
 		}
-		Map<Cluster,Double> _memberships;
 		for(PreparedResult _item: items) {
-			_memberships = new HashMap<Cluster,Double>();			
-			for(Map.Entry<Integer,Double> _mem: memberships.get(_item).entrySet()) {
-			      _memberships.put(_clMapping.get(_mem.getKey()),_mem.getValue());
-			}
-			_clusters = addItemToClusters(_clusters, _item, _memberships);
-		}
-		for(Cluster _cluster: _clusters) {
-			_cluster.sort();
+			_clusters = addItemToClusters(_clusters, _item);
 		}
 		return _clusters;
 	}
@@ -117,8 +107,13 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	}
 
 	/**
-	 * Calculates the memberships of a given item to a specified set of centroids.
-	 */ 
+	 * Calculates the relevances of an item to a collection of cluster centroids.
+	 * This method is required when adding additional results to an already existing
+	 * 
+	 * @param centroids The centroids of a collection of clusters.
+	 * @param item The item for which the relevances shall be determined.
+	 * @return A map of the relevances assigned to the specific centroids. 
+	 */
 	private Map<PreparedResult,Double> calculateMemberships(Collection<PreparedResult> centroids, PreparedResult item) {
 		Map<PreparedResult,Double> _distances = new HashMap<PreparedResult,Double>();
 		Map<PreparedResult,Double> _memberships = new HashMap<PreparedResult,Double>();
@@ -204,7 +199,7 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	 * @param item2 Second item for comparison.
 	 * @return Eucledian distance between the two items.
 	 */
-	public static double getEucledianDistance(PreparedResult item1, PreparedResult item2) {
+	private double getEucledianDistance(PreparedResult item1, PreparedResult item2) {
 		double distance = 0.0;
 		Set<PreparedResult> items = new HashSet<PreparedResult>();
 		items.add(item1);
@@ -235,40 +230,72 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	/**
 	 * Adds a given item to a set of clusters based on the provided membership values.
 	 */
-	private Collection<Cluster> addItemToClusters(Collection<Cluster> clusters, PreparedResult item, Map<Cluster,Double> memberships) {
-		Collection<Cluster> _assignments = new HashSet<Cluster>();
-		Cluster		    _maxMember	 = null;
-		for(Map.Entry<Cluster,Double> _membership: memberships.entrySet()) {
-			if(_membership.getValue() > getSensability(clusters)) _assignments.add(_membership.getKey());
-			if(_maxMember == null || memberships.get(_membership.getKey()) < _membership.getValue()) _maxMember = _membership.getKey();
-		}
-		if(_assignments.isEmpty()) _assignments.add(_maxMember);
-		ClusteredResult _result = new SimpleFuzzyKMeansClusteredResult(item, memberships);
+	private Collection<Cluster> addItemToClusters(Collection<Cluster> clusters, PreparedResult item) {
+		ClusteredResult _result 		 = createClusteredResult(clusters, item);
+		Collection<Cluster> _assignments = determineRelevantClusters(clusters, _result);
 		for(Cluster _cluster:_assignments) {
 			_cluster.addResult(_result);
 		}
 		return clusters;
 	}
 
+	/* (non-Javadoc)
+	 * @see eu.tilsner.cubansea.cluster.ClusteringAlgorithm#determineRelevantClusters(java.util.Collection, eu.tilsner.cubansea.cluster.ClusteredResult)
+	 */
+	@Override
+	public Collection<Cluster> determineRelevantClusters(Collection<Cluster> clusters, ClusteredResult item) {
+		Collection<PreparedResult> _centroids = new HashSet<PreparedResult>();
+		for(Cluster _cluster: clusters) {
+			_centroids.add(_cluster.getCentroid());
+		}
+		Map<PreparedResult,Double> _mems = calculateMemberships(_centroids, item.getPreparedResult());
+		Collection<Cluster> _assignments = new HashSet<Cluster>();
+		Cluster		    	_maxMember	 = null;
+		double				_membership  = 0.0;
+		for(Cluster _cluster: clusters) {
+			_membership = _mems.get(_cluster.getCentroid());
+			if(_membership > getSensability(clusters)) _assignments.add(_cluster);
+			if(_maxMember == null || _mems.get(_maxMember.getCentroid()) < _membership) _maxMember = _cluster;
+		}
+		if(_assignments.isEmpty()) _assignments.add(_maxMember);
+		return _assignments;
+	}
+	
+	/**
+	 * Evaluates the sensability for a set of clusters.
+	 * 
+	 * @param clusters The collection of clusters.
+	 * @return The sensability.
+	 */
 	private double getSensability(Collection<Cluster> clusters) {
-		return (1.0 / clusters.size())*FUZZYNESS;
+		return (1.0 / clusters.size())*sensitivity;
 	}
 	
 	/* (non-Javadoc)
-	 * @see eu.tilsner.cubansea.cluster.ClusteringAlgorithm#addItemToClusters(java.util.Collection, eu.tilsner.cubansea.prepare.PreparedResult)
+	 * @see eu.tilsner.cubansea.cluster.ClusteringAlgorithm#createClusteredResult(java.util.Collection, eu.tilsner.cubansea.prepare.PreparedResult)
 	 */
 	@Override
-	public Collection<Cluster> addItemToClusters(Collection<Cluster> clusters, PreparedResult item) {
-		Map<PreparedResult,Cluster> _centroids = new HashMap<PreparedResult,Cluster>();
+	public ClusteredResult createClusteredResult(Collection<Cluster> clusters, PreparedResult item) {
+		Map<Cluster,Double> _relevances = new HashMap<Cluster,Double>();
 		for(Cluster _cluster: clusters) {
-		  _centroids.put(_cluster.getCentroid(),_cluster);
+			_relevances.put(_cluster, getEucledianDistance(_cluster.getCentroid(),item));
 		}
-		Map<PreparedResult,Double> _tmemberships = calculateMemberships(_centroids.keySet(), item);
-		Map<Cluster,Double>	   _memberships  = new HashMap<Cluster,Double>();
-		for(Map.Entry<PreparedResult,Double> _tmembership: _tmemberships.entrySet()) {
-		  _memberships.put(_centroids.get(_tmembership.getKey()), _tmembership.getValue());
-		}
-		clusters = addItemToClusters(clusters, item, _memberships);
-		return clusters;
+		return new SimpleFuzzyKMeansClusteredResult(item, _relevances);
+	}
+
+	/**
+	 * Default constructor initializing the sensitivity with 1.
+	 */
+	public SimpleFuzzyKMeansClusteringAlgorithm() {
+		this(1.0);
+	}
+
+	/**
+	 * Constructor allow an individual specification of the sensitivity.
+	 * 
+	 * @param _sensitivity The sensitivity to use.
+	 */
+	public SimpleFuzzyKMeansClusteringAlgorithm(double _sensitivity) {
+		sensitivity = _sensitivity;		
 	}
 }

@@ -23,36 +23,11 @@ public interface Cluster {
 	public PreparedResult getCentroid();
 	
 	/**
-	 * Returns a subset of the result list.
+	 * Returns the entire result list.
 	 * 
-	 * @param first The index of the first item in the result list.
-	 * @param count The number of results that are required.
 	 * @return The subset of the result list.
 	 */
-	public List<ClusteredResult> getResults(int first, int count);
-
-	/**
-	 * Determines the number of available results.
-	 * 
-	 * @return The number of results available.
-	 */
-	public int getResultCount();
-	
-	/**
-	 * Identifies a common topic for all results in this cluster.
-	 * 
-	 * @return The topic of this cluster.
-	 */
-	public String getTopic();
-	
-	/**
-	 * Identifies a common topic for all results in this cluster
-	 * based on the search terms used to retrieve the results.
-	 * 
-	 * @param searchTerms A list of the search terms used.
-	 * @return The topic of this cluster.
-	 */
-	public String getTopic(List<String> searchTerms);
+	public List<ClusteredResult> getResults();
 	
 	/**
 	 * Adds a result to a cluster after its creation.
@@ -62,14 +37,10 @@ public interface Cluster {
 	public void addResult(ClusteredResult result);
 	
 	/**
-	 * Sorts the results inside a cluster.
-	 */
-	public void sort();
-
-	/**
-	 * Returns the relevance of the rsult best fitting this cluster.
+	 * Returns the relevance of the result best fitting this cluster.
 	 *
-	 * @return The relevacne value
+	 * @return The relevance value
 	 */
 	public double getMaximumRelevance();
+
 }

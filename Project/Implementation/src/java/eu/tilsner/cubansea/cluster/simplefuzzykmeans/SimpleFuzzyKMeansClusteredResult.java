@@ -26,11 +26,19 @@ public class SimpleFuzzyKMeansClusteredResult implements ClusteredResult {
 	}
 
 	/* (non-Javadoc)
+	 * @see eu.tilsner.cubansea.cluster.ClusteredResult#getAbsoluteRelevance(eu.tilsner.cubansea.cluster.Cluster)
+	 */
+	@Override
+	public double getAbsoluteRelevance(Cluster cluster) {
+		return relevances.get(cluster);
+	}
+
+	/* (non-Javadoc)
 	 * @see eu.tilsner.cubansea.cluster.ClusteredResult#getRelevance(eu.tilsner.cubansea.cluster.Cluster)
 	 */
 	@Override
 	public double getRelevance(Cluster cluster) {
-		return relevances.get(cluster);
+		return getAbsoluteRelevance(cluster) / cluster.getMaximumRelevance();
 	}
 
 	/**
