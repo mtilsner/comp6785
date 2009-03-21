@@ -40,7 +40,7 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 		while(!satisfied()) iterate();
 		Collection<Cluster> _clusters = new HashSet<Cluster>();
 		for(Map.Entry<Integer,PreparedResult> _centroid: centroids.entrySet()) {
-			Cluster _cluster = new SimpleFuzzyKMeansCluster(null, _centroid.getValue().getAllFrequencies());
+			Cluster _cluster = new SimpleFuzzyKMeansCluster(null, _centroid.getValue());
 			_clusters.add(_cluster);
 		}
 		for(PreparedResult _item: items) {
@@ -250,8 +250,8 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 		}
 		Map<PreparedResult,Double> _mems = calculateMemberships(_centroids, item.getPreparedResult());
 		Collection<Cluster> _assignments = new HashSet<Cluster>();
-		Cluster		    	_maxMember	 = null;
-		double				_membership  = 0.0;
+		Cluster		    	  _maxMember = null;
+		double				 _membership = 0.0;
 		for(Cluster _cluster: clusters) {
 			_membership = _mems.get(_cluster.getCentroid());
 			if(_membership > getSensability(clusters)) _assignments.add(_cluster);

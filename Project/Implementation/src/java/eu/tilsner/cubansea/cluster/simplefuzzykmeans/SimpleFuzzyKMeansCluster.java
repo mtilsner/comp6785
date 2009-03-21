@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import eu.tilsner.cubansea.cluster.Cluster;
 import eu.tilsner.cubansea.cluster.ClusteredResult;
@@ -19,8 +18,7 @@ import eu.tilsner.cubansea.prepare.PreparedResult;
 public class SimpleFuzzyKMeansCluster implements Cluster {
 
 	private List<ClusteredResult>	results;
-	private Map<String,Double>		centroidAttributes;
-	private Comparator<ClusteredResult> comparator;
+	private PreparedResult			centroid;
 	
 	/* (non-Javadoc)
 	 * @see eu.tilsner.cubansea.cluster.Cluster#addResult(eu.tilsner.cubansea.cluster.ClusteredResult)
@@ -35,7 +33,7 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 	 */
 	@Override
 	public PreparedResult getCentroid() {
-		return new CentroidPreparedResult(centroidAttributes);
+		return centroid;
 	}
 
 	/* (non-Javadoc)
@@ -60,7 +58,13 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 	 * Sorts the current result set using the provided sorting algorithm.
 	 */
 	private void sort() {
-		Collections.sort(results, comparator);
+		final Cluster _cluster = this;
+		Collections.sort(results, new Comparator<ClusteredResult>(){
+			@Override
+			public int compare(ClusteredResult item1, ClusteredResult item2) {
+				return (int) ((item2.getAbsoluteRelevance(_cluster) - item2.getAbsoluteRelevance(_cluster))*5.0);
+			}
+		});
 	}
 
 	/**
@@ -68,18 +72,11 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 	 * A new constructor is created that can be used later on by the sorting algorithm.
 	 * 
 	 * @param _results The initial results for this cluster.
-	 * @param _attributes
+	 * @param _centroid The centroid of the cluster.
 	 */
-	public SimpleFuzzyKMeansCluster(List<ClusteredResult> _results, Map<String,Double> _attributes) {
-		centroidAttributes = _attributes;
+	public SimpleFuzzyKMeansCluster(List<ClusteredResult> _results, PreparedResult _centroid) {
+		centroid = _centroid;
 		results = (_results == null) ? new ArrayList<ClusteredResult>() : _results;
-		if(results == null) return;
-		final Cluster _cluster = this;
-		comparator = new Comparator<ClusteredResult>(){
-			@Override
-			public int compare(ClusteredResult item1, ClusteredResult item2) {
-				return (int) ((item2.getAbsoluteRelevance(_cluster) - item2.getAbsoluteRelevance(_cluster))*5.0);
-			}
-		};
+		if(_results != null) sort();
 	}
 }

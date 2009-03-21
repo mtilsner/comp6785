@@ -64,4 +64,12 @@ public interface Configuration {
 	 * @return An instance of a clustering algorithm.
 	 */
 	public ClusteringAlgorithm getClusteringAlgorithm();
+	
+	/**
+	 * Determines how many words shall be used for constructing
+	 * the cluster topics.
+	 * 
+	 * @return The number of words.
+	 */
+	public int getTopicSize();
 }
