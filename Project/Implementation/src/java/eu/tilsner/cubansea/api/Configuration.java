@@ -6,6 +6,7 @@ import java.util.List;
 import eu.tilsner.cubansea.cluster.ClusteringAlgorithm;
 import eu.tilsner.cubansea.prepare.PreparationAlgorithm;
 import eu.tilsner.cubansea.search.SearchEngine;
+import eu.tilsner.cubansea.topic.TopicGeneratorAlgorithm;
 
 public interface Configuration {
 	
@@ -55,7 +56,7 @@ public interface Configuration {
 	 * 
 	 * @return An instance of a preparation algorithm.
 	 */
-	public PreparationAlgorithm getPrepareAlgorithm();
+	public PreparationAlgorithm getPreparationAlgorithm();
 	
 	/**
 	 * Creates the clustering algorithm that shall be used
@@ -66,10 +67,10 @@ public interface Configuration {
 	public ClusteringAlgorithm getClusteringAlgorithm();
 	
 	/**
-	 * Determines how many words shall be used for constructing
-	 * the cluster topics.
+	 * Creates the algorithm that shall be used for generating
+	 * cluster topics.
 	 * 
-	 * @return The number of words.
+	 * @return An instance of the topic generator algorithm.
 	 */
-	public int getTopicSize();
+	public TopicGeneratorAlgorithm getTopicGeneratorAlgorithm();
 }

@@ -3,16 +3,9 @@ package eu.tilsner.cubansea.api;
 import java.awt.Color;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import eu.tilsner.cubansea.cluster.ClusteredResult;
-import eu.tilsner.cubansea.utilities.StemmerHelper;
-import eu.tilsner.cubansea.utilities.StringHelper;
 
 /**
  * Facade cluster class that handles all result access. Facade clusters are created
@@ -30,8 +23,8 @@ public class Cluster {
 	private Color 			color;
 	private List<Result>	results;
 	private Search			search;
-	private int				topicSize;
 	private String			topic;
+	private int				resultCountGuess;
 	
 	/**
 	 * Returns the base color for this cluster. Each cluster has one
@@ -68,57 +61,30 @@ public class Cluster {
 	}
 	
 	/**
-	 * Returns the stems of the centroid attributes ordered by
-	 * frequency
+	 * Returns the guessed number of results for this cluster.
 	 * 
-	 * @return An ordered list of the centroid stems.
+	 * @return The guessed number of results.
 	 */
-	private List<String> getFrequencyOrderedStems() {
-		List<Map.Entry<String, Double>> _frequencies = new ArrayList<Map.Entry<String, Double>>();
-		_frequencies.addAll(cluster.getCentroid().getAllFrequencies().entrySet());
-		Collections.sort(_frequencies, new Comparator<Map.Entry<String,Double>>(){
-			@Override
-			public int compare(Entry<String, Double> _item1,Entry<String, Double> _item2){
-				return (int) ((_item2.getValue() - _item1.getValue())*5);
-			}
-		});
-		List<String> _stems = new ArrayList<String>();
-		for(Map.Entry<String,Double> _frequency: _frequencies) {
-			_stems.add(StemmerHelper.stem(_frequency.getKey()));
-		}
-		return _stems;
+	public int getResultCountGuess() {
+		return resultCountGuess;
 	}
 	
 	/**
-	 * Determines the most frequently used word in the result
-	 * items that leads to the specified stem.
+	 * Sets the guessed result count.
 	 * 
-	 * @param stem The stem for which the words shall be examined.
-	 * @return The word most commonly used leading to the stem.
+	 * @param _resultCountGuess The guess for the result count.
 	 */
-	private String getMostCommonStemUtilization(String stem) {
-		Map<String,Integer> _frequencies = new HashMap<String,Integer>();
-		String _stem;
-		for(Result _result: results) {
-			for(String _word: StringHelper.split(_result.getSummary()," ")) {
-				_stem = StemmerHelper.stem(_word);
-				if(stem.equals(_stem)) {
-					if(!_frequencies.containsKey(_word)) 
-						_frequencies.put(_word, 1);
-					else
-						_frequencies.put(_word, _frequencies.get(_word)+1);
-				}
-			}
-		}
-		List<Map.Entry<String, Integer>> _freqs = new ArrayList<Map.Entry<String, Integer>>();
-		_freqs.addAll(_frequencies.entrySet());
-		Collections.sort(_freqs, new Comparator<Map.Entry<String,Integer>>(){
-			@Override
-			public int compare(Entry<String, Integer> _item1,Entry<String, Integer> _item2){
-				return _item2.getValue() - _item1.getValue();
-			}
-		});
-		return _freqs.get(0).getKey();
+	protected void setResultCountGuess(int _resultCountGuess) {
+		resultCountGuess = _resultCountGuess;
+	}
+	
+	/**
+	 * Returns the current count of results.
+	 * 
+	 * @return The count of results fetched so far.
+	 */
+	protected int getResultCount() {
+		return results.size();
 	}
 	
 	/**
@@ -128,22 +94,6 @@ public class Cluster {
 	 * @return The topic.
 	 */
 	public String getTopic() {
-		if(topic == null) {
-			List<String> _searchStems = new ArrayList<String>();
-			for(String _term: search.getTerms()) {
-				_searchStems.add(StemmerHelper.stem(_term));
-			}
-			List<String> _stems = new ArrayList<String>();
-			for(String _stem: getFrequencyOrderedStems()) {
-				if(!_searchStems.contains(_stem)) _stems.add(_stem);
-				if(_stems.size() >= topicSize) break;
-			}
-			List<String> _words = new ArrayList<String>();
-			for(String _stem: _stems) {
-				_words.add(getMostCommonStemUtilization(_stem));
-			}
-			topic = StringHelper.join(_words, " ");
-		}
 		return topic;
 	}
 	
@@ -192,11 +142,11 @@ public class Cluster {
 	 * @param _search The search that can be used for retrieving additional results.
 	 * @param _topicSize The number of words the cluster topic shall consist of.
 	 */
-	public Cluster(eu.tilsner.cubansea.cluster.Cluster _cluster, Color _color, Search _search, int _topicSize) {
+	public Cluster(eu.tilsner.cubansea.cluster.Cluster _cluster, Color _color, Search _search, String _topic) {
 		color   	= _color;
 		cluster 	= _cluster;
 		search  	= _search;
-		topicSize	= _topicSize;
+		topic		= _topic;
 		results = new ArrayList<Result>();
 		for(ClusteredResult _result: _cluster.getResults()) {
 			results.add(new Result(_result));

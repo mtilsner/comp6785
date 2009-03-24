@@ -13,6 +13,7 @@ import eu.tilsner.cubansea.prepare.PreparationAlgorithm;
 import eu.tilsner.cubansea.prepare.PreparedResult;
 import eu.tilsner.cubansea.search.SearchEngineException;
 import eu.tilsner.cubansea.search.SearchResult;
+import eu.tilsner.cubansea.topic.TopicGeneratorAlgorithm;
 import eu.tilsner.cubansea.utilities.TechnicalError;
 
 /**
@@ -30,6 +31,15 @@ public class Search {
 	private	ClusteringAlgorithm					clusterAlgorithm;
 	private List<String>						terms;
 	private	Map<eu.tilsner.cubansea.cluster.Cluster,Cluster> clusters;
+
+	/**
+	 * Updates guesses the total number of result counts for each cluster.
+	 */
+	private void guessResultCounts() {
+		for(Cluster _cluster: clusters.values()) {
+			_cluster.setResultCountGuess(_cluster.getResultCount()/cacheStatus*search.getResultCount());
+		}
+	}
 	
 	/**
 	 * Fetches the next chunk of results from the search engine and transforms the result
@@ -72,6 +82,7 @@ public class Search {
 		for(Map.Entry<Cluster,List<ClusteredResult>> _entry: _assignments.entrySet()) {
 			_entry.getKey().addResults(_entry.getValue());
 		}
+		guessResultCounts();
 	}
 	
 	/**
@@ -104,7 +115,7 @@ public class Search {
 			clusters			= new HashMap<eu.tilsner.cubansea.cluster.Cluster,Cluster>();
 			configuration		= config;
 			terms				= _terms;
-			prepAlgorithm		= config.getPrepareAlgorithm();
+			prepAlgorithm		= config.getPreparationAlgorithm();
 			clusterAlgorithm	= config.getClusteringAlgorithm();
 			cacheStatus			= config.getClusteringBase();
 			search				= config.getSearchEngine().createSearch(terms, cacheStatus);
@@ -112,11 +123,16 @@ public class Search {
 			List<PreparedResult> _pres	= prepAlgorithm.prepareResults(_sres);
 			Collection<eu.tilsner.cubansea.cluster.Cluster> _clusters = 
 				clusterAlgorithm.createClusters(_pres, config.getNumberOfClusters());
-			int _index = 0;
+			TopicGeneratorAlgorithm _topicAlgorithm = config.getTopicGeneratorAlgorithm();
+			int _index = 0;			
 			List<Color> _colors = config.getClusterColors();
 			for(eu.tilsner.cubansea.cluster.Cluster _cluster: _clusters) {
-				clusters.put(_cluster,new Cluster(_cluster, _colors.get(_index++%_colors.size()), this, config.getTopicSize()));
+				clusters.put(_cluster,new Cluster(_cluster, 
+												  _colors.get(_index++%_colors.size()), 
+												  this, 
+												  _topicAlgorithm.generateTopic(_cluster)));
 			}
+			guessResultCounts();
 		} catch (SearchEngineException e) {
 			throw new TechnicalError(e);
 		}
