@@ -27,7 +27,7 @@ public interface PreparedResult {
 	 */
 	public static final List<String> IGNORED_WORDS = Arrays.<String>asList(
 		"therefor", "thus", "hence", "because", "since", "consequently", "however", "though", "while", "until", 
-		"from"
+		"from", "need", "such", "what", "with", "that"
 	);
 	
 	/**

@@ -1,9 +1,11 @@
 package eu.tilsner.cubansea.topic.wordfrequency;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,7 +39,7 @@ public class WordFrequencyTopicGeneratorAlgorithm implements TopicGeneratorAlgor
 		Collections.sort(_frequencies, new Comparator<Map.Entry<String,Double>>(){
 			@Override
 			public int compare(Entry<String, Double> _item1,Entry<String, Double> _item2){
-				return (int) ((_item2.getValue() - _item1.getValue())*5);
+				return (_item2.getValue() > _item1.getValue()) ? 1 : ((_item2.getValue() < _item1.getValue()) ? -1 : 0);
 			}
 		});
 		List<String> _stems = new ArrayList<String>();
@@ -46,7 +48,39 @@ public class WordFrequencyTopicGeneratorAlgorithm implements TopicGeneratorAlgor
 		}
 		return _stems;
 	}
-	
+
+	/**
+	 * Returns all non-trivial words found inside a string.
+	 * 
+	 * @param content The string of the content with words separated by spaces.
+	 * @return A filtered list of the words to be considered.
+	 */
+	private List<String> getWords(String content) {
+		if(content == null) return new ArrayList<String>();
+		content = content.replaceAll(PreparedResult.INVALID_CHARACTER_PATTERN, " ");
+		content = content.replaceAll("\\s+", " ");
+		List<String> _words = StringHelper.split(content, " ");
+		return filterWords(_words);
+	}
+
+	/**
+	 * Filters a list of words according to the filtering information provided
+	 * in <i>PreparedResult</i>. Returns a new list without all words specified
+	 * to be ignored.
+	 * 
+	 * @param words The list of words to be filtered.
+	 * @return The filtered word list.
+	 */
+	private List<String> filterWords(List<String> words) {
+		List<String> _filtered = new ArrayList<String>();
+		for(String _word: words) {
+			_word = _word.toLowerCase();
+			if(_word.length() > PreparedResult.IGNORED_WORD_LENGTH && !PreparedResult.IGNORED_WORDS.contains(_word))
+				_filtered.add(_word);
+		}
+		return _filtered;
+	}	
+
 	/**
 	 * Determines the most frequently used word in the result
 	 * items that leads to the specified stem.
@@ -57,17 +91,19 @@ public class WordFrequencyTopicGeneratorAlgorithm implements TopicGeneratorAlgor
 	private String getMostCommonStemUtilization(String stem, List<PreparedResult> results) {
 		Map<String,Integer> _frequencies = new HashMap<String,Integer>();
 		String _stem;
+		Collection<String> _debug = new HashSet<String>(); 
 		for(PreparedResult _result: results) {
-			for(String _word: StringHelper.split(_result.getSearchResult().getSummary()," ")) {
-				_stem = StemmerHelper.stem(_word);
-				if(stem.equals(_stem)) {
+			for(String _word: getWords(_result.getSearchResult().getSummary())) {
+				_stem = StemmerHelper.stem(_word).toLowerCase();
+				if(stem.toLowerCase().equals(_stem)) {
 					if(!_frequencies.containsKey(_word)) 
 						_frequencies.put(_word, 1);
 					else
 						_frequencies.put(_word, _frequencies.get(_word)+1);
-				}
+				} else _debug.add(_stem);
 			}
 		}
+		if(_frequencies.size() == 0) return null;
 		List<Map.Entry<String, Integer>> _freqs = new ArrayList<Map.Entry<String, Integer>>();
 		_freqs.addAll(_frequencies.entrySet());
 		Collections.sort(_freqs, new Comparator<Map.Entry<String,Integer>>(){
@@ -99,15 +135,17 @@ public class WordFrequencyTopicGeneratorAlgorithm implements TopicGeneratorAlgor
 		List<String> _stems = new ArrayList<String>();
 		for(String _stem: getFrequencyOrderedStems(cluster)) {
 			if(!_searchStems.contains(_stem)) _stems.add(_stem);
-			if(_stems.size() >= numWords) break;
 		}
 		List<PreparedResult> _results = new ArrayList<PreparedResult>();
 		for(ClusteredResult _result: cluster.getResults()) {
 			_results.add(_result.getPreparedResult());
 		}
 		List<String> _words = new ArrayList<String>();
+		String _word;
 		for(String _stem: _stems) {
-			_words.add(getMostCommonStemUtilization(_stem, _results));
+			_word = getMostCommonStemUtilization(_stem, _results);
+			if(_word != null) _words.add(_word);
+			if(_words.size() >= numWords) break;
 		}
 		return StringHelper.join(_words, " ");
 	}

@@ -41,7 +41,6 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 	 */
 	@Override
 	public List<ClusteredResult> getResults() {
-		sort();
 		return results;
 	}
 	
@@ -50,19 +49,20 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 	 */
 	@Override
 	public double getMaximumRelevance() {
-		sort();
 		return results.get(0).getAbsoluteRelevance(this);
 	}
 
 	/**
 	 * Sorts the current result set using the provided sorting algorithm.
 	 */
-	private void sort() {
+	public void sort() {
 		final Cluster _cluster = this;
 		Collections.sort(results, new Comparator<ClusteredResult>(){
 			@Override
 			public int compare(ClusteredResult item1, ClusteredResult item2) {
-				return (int) ((item2.getAbsoluteRelevance(_cluster) - item2.getAbsoluteRelevance(_cluster))*5.0);
+				double _rel2 = item2.getAbsoluteRelevance(_cluster);
+				double _rel1 = item1.getAbsoluteRelevance(_cluster);
+				return (_rel2 > _rel1) ? 1 : ((_rel2 < _rel1) ? -1 : 0);
 			}
 		});
 	}
@@ -77,6 +77,5 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 	public SimpleFuzzyKMeansCluster(List<ClusteredResult> _results, PreparedResult _centroid) {
 		centroid = _centroid;
 		results = (_results == null) ? new ArrayList<ClusteredResult>() : _results;
-		if(_results != null) sort();
 	}
 }

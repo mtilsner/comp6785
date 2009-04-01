@@ -3,8 +3,11 @@ package eu.tilsner.cubansea.api;
 import java.awt.Color;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import eu.tilsner.cubansea.cluster.ClusteredResult;
 
 /**
@@ -19,12 +22,21 @@ import eu.tilsner.cubansea.cluster.ClusteredResult;
 public class Cluster {
 	
 	private eu.tilsner.cubansea.cluster.Cluster cluster;
-	
+	private String			id;
 	private Color 			color;
 	private List<Result>	results;
 	private Search			search;
 	private String			topic;
 	private int				resultCountGuess;
+	
+	/**
+	 * Returns a unique string id for this cluster.
+	 * 
+	 * @return The string id.
+	 */
+	public String getId() {
+		return id;
+	}
 	
 	/**
 	 * Returns the base color for this cluster. Each cluster has one
@@ -35,6 +47,25 @@ public class Cluster {
 	 */
 	public Color getBaseColor() {
 		return color;
+	}
+	
+	protected void setBaseColor(Color _color) {
+		color = _color;
+	}
+	
+	/**
+	 * Returns the CSS string of the base color.
+	 * 
+	 * @return The CSS color string.
+	 */
+	public String getCssColor() {
+		String _red 	= Integer.toHexString(color.getRed());
+		String _green	= Integer.toHexString(color.getGreen());
+		String _blue	= Integer.toHexString(color.getBlue());
+		if(_red.length() < 2) 	_red   = "0"+_red;
+		if(_green.length() < 2) _green = "0"+_green;
+		if(_blue.length() < 2) 	_blue  = "0"+_blue; 
+		return _red+_green+_blue;
 	}
 	
 	/**
@@ -57,7 +88,23 @@ public class Cluster {
 		}
 		int _last  = Math.min(first+count,results.size());
 		int _first = Math.min(first, _last);
-		return results.subList(_first,_last);
+		return getCurrentResults().subList(_first,_last);
+	}
+	
+	/**
+	 * Returns the currently fetched result list.
+	 * 
+	 * @return The currently available results.
+	 */
+	public List<Result> getCurrentResults() {
+		Collections.sort(results, new Comparator<Result>(){
+			@Override
+			public int compare(Result o1, Result o2) {
+				// TODO Auto-generated method stub
+				return o1.getOriginalRank()-o2.getOriginalRank();
+			}
+		});
+		return results;
 	}
 	
 	/**
@@ -83,7 +130,7 @@ public class Cluster {
 	 * 
 	 * @return The count of results fetched so far.
 	 */
-	protected int getResultCount() {
+	public int getCurrentResultCount() {
 		return results.size();
 	}
 	
@@ -104,10 +151,8 @@ public class Cluster {
 	 * 
 	 * @param newResults The new results that have to be added.
 	 */
-	protected void addResults(List<ClusteredResult> newResults) {
-		for(ClusteredResult _result: newResults) {
-			results.add(new Result(_result));
-		}
+	protected void addResults(List<Result> newResults) {
+		results.addAll(newResults);
 	}
 	
 	/**
@@ -143,11 +188,12 @@ public class Cluster {
 	 * @param _topicSize The number of words the cluster topic shall consist of.
 	 */
 	public Cluster(eu.tilsner.cubansea.cluster.Cluster _cluster, Color _color, Search _search, String _topic) {
+		id			= UUID.randomUUID().toString();
 		color   	= _color;
 		cluster 	= _cluster;
 		search  	= _search;
 		topic		= _topic;
-		results = new ArrayList<Result>();
+		results 	= new ArrayList<Result>();
 		for(ClusteredResult _result: _cluster.getResults()) {
 			results.add(new Result(_result));
 		}

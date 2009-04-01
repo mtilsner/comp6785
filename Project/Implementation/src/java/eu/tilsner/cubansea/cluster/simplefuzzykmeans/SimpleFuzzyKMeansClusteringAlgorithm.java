@@ -21,8 +21,9 @@ import eu.tilsner.cubansea.prepare.PreparedResult;
  */
 public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm {
 
-	private static final int MAXIMUM_ITERATIONS 		   = 10;
+	private static final int MAXIMUM_ITERATIONS 		   = 250;
 	private static final double MINUMUM_ITERATION_PROGRESS = 0.5;
+	private static final double FUZZYFIER				   = 1.5;
 	
 	private Map<PreparedResult,Map<Integer,Double>> oldMemberships;
 	private Map<PreparedResult,Map<Integer,Double>> memberships;
@@ -45,6 +46,9 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 		}
 		for(PreparedResult _item: items) {
 			_clusters = addItemToClusters(_clusters, _item);
+		}
+		for(Cluster _cluster: _clusters) {
+			((SimpleFuzzyKMeansCluster) _cluster).sort();
 		}
 		return _clusters;
 	}
@@ -116,23 +120,20 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	 */
 	private Map<PreparedResult,Double> calculateMemberships(Collection<PreparedResult> centroids, PreparedResult item) {
 		Map<PreparedResult,Double> _distances = new HashMap<PreparedResult,Double>();
+		for(PreparedResult _cluster: centroids) {
+			_distances.put(_cluster, Math.max(getEucledianDistance(_cluster, item),0.0000000001));
+			_distances.put(_cluster, getEucledianDistance(_cluster, item));
+		}
+
 		Map<PreparedResult,Double> _memberships = new HashMap<PreparedResult,Double>();
-		double _distanceSum = 0.0;
-		double _distance;
-		double _membershipSum = 0.0;
-		double _membership;
+		double _sum;
 		for(PreparedResult _cluster: centroids) {
-			_distance = getEucledianDistance(_cluster, item);
-			_distances.put(_cluster, _distance);
-			_distanceSum += _distance;
-		}
-		for(PreparedResult _cluster: centroids) {
-			_membership = 1-_distances.get(_cluster)/_distanceSum;
-			_memberships.put(_cluster, _membership);
-			_membershipSum += _membership;
-		}
-		for(PreparedResult _cluster: centroids) {
-			_memberships.put(_cluster,_memberships.get(_cluster)/_membershipSum);
+			_sum = 0.0;
+			for(PreparedResult _clusterJ: centroids) {
+				_sum += Math.pow(_distances.get(_cluster)/_distances.get(_clusterJ),
+								 2/(FUZZYFIER-1)); 
+			}
+			_memberships.put(_cluster, 1/_sum);
 		}
 		return _memberships;
 	}
@@ -144,7 +145,6 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 		Map<String,Double> _centroid;
 		double			   _membership;
 		double			   _membershipSum;
-		double			   _value;
 		for(Integer _cluster: centroids.keySet()) {
 			_centroid = new HashMap<String,Double>();
 			for(String _attribute: attributes) {
@@ -152,18 +152,15 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 			}
 			_membershipSum = 0;
 			for(Map.Entry<PreparedResult,Map<Integer,Double>> _item: memberships.entrySet()) {
-				_membership     = _item.getValue().get(_cluster)/_item.getKey().getSearchResult().getRank();
+				_membership     = _item.getValue().get(_cluster);
 				_membershipSum += _membership;
 				for(String _attribute: attributes) {
-					_value  = _centroid.get(_attribute);
-					_value += _item.getKey().getFrequency(_attribute)*_membership;
-					_centroid.put(_attribute, _value);
+					_centroid.put(_attribute, _centroid.get(_attribute) +
+											  _item.getKey().getFrequency(_attribute)*_membership);
 				}
 			}
 			for(String _attribute: attributes) {
-				_value  = _centroid.get(_attribute);
-				_value /= _membershipSum;
-				_centroid.put(_attribute, _value);
+				_centroid.put(_attribute, _centroid.get(_attribute) / _membershipSum);
 			}
 			centroids.put(_cluster, new CentroidPreparedResult(_centroid));
 		}

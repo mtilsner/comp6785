@@ -3,10 +3,12 @@ package eu.tilsner.cubansea.api;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import eu.tilsner.cubansea.cluster.ClusteredResult;
 import eu.tilsner.cubansea.cluster.ClusteringAlgorithm;
 import eu.tilsner.cubansea.prepare.PreparationAlgorithm;
@@ -31,13 +33,14 @@ public class Search {
 	private	ClusteringAlgorithm					clusterAlgorithm;
 	private List<String>						terms;
 	private	Map<eu.tilsner.cubansea.cluster.Cluster,Cluster> clusters;
-
+	private boolean								done;
+	
 	/**
 	 * Updates guesses the total number of result counts for each cluster.
 	 */
 	private void guessResultCounts() {
 		for(Cluster _cluster: clusters.values()) {
-			_cluster.setResultCountGuess(_cluster.getResultCount()/cacheStatus*search.getResultCount());
+			_cluster.setResultCountGuess((int) Math.round(_cluster.getCurrentResultCount()*1.0/cacheStatus*search.getResultCount()));
 		}
 	}
 	
@@ -64,25 +67,36 @@ public class Search {
 	}
 	
 	/**
+	 * All results are fetched. No more results can be expected.
+	 * 
+	 * @return
+	 */
+	public boolean isDone() {
+		return done;
+	}
+	
+	/**
 	 * Wrapper for the performFetch method. It can be invoked by a cluster in order to request
 	 * additional results.
 	 * 
+	 * @return A map of the new found results assigned to the clusters.
 	 * @throws NoMoreResultsException The end of the result list has been reached.
 	 */
-	protected void fetchNextBlock() throws NoMoreResultsException {
+	public Map<Cluster,List<Result>> fetchNextBlock() throws NoMoreResultsException {
 		List<ClusteredResult> _results = performFetch();
-		Map<Cluster,List<ClusteredResult>> _assignments = new HashMap<Cluster,List<ClusteredResult>>();
+		Map<Cluster,List<Result>> _assignments = new HashMap<Cluster,List<Result>>();
 		for(ClusteredResult _result: _results) {
 			for(eu.tilsner.cubansea.cluster.Cluster _cluster: clusterAlgorithm.determineRelevantClusters(clusters.keySet(), _result)) {
 				if(_assignments.get(clusters.get(_cluster)) == null) 
-					_assignments.put(clusters.get(_cluster), new ArrayList<ClusteredResult>());
-				_assignments.get(clusters.get(_cluster)).add(_result);
+					_assignments.put(clusters.get(_cluster), new ArrayList<Result>());
+				_assignments.get(clusters.get(_cluster)).add(new Result(_result));
 			}
 		}
-		for(Map.Entry<Cluster,List<ClusteredResult>> _entry: _assignments.entrySet()) {
+/*		for(Map.Entry<Cluster,List<Result>> _entry: _assignments.entrySet()) {
 			_entry.getKey().addResults(_entry.getValue());
 		}
-		guessResultCounts();
+		guessResultCounts();*/
+		return _assignments;
 	}
 	
 	/**
@@ -101,7 +115,21 @@ public class Search {
 	 * @return The clusters.
 	 */
 	public Collection<Cluster> getClusters() {
-		return clusters.values();
+		List<Cluster> _clusters = new ArrayList<Cluster>();
+		_clusters.addAll(clusters.values());
+		Collections.sort(_clusters,new Comparator<Cluster>(){
+			@Override
+			public int compare(Cluster o1, Cluster o2) {
+				return o2.getResultCountGuess()-o1.getResultCountGuess();
+			}
+			
+		});
+		int _index = 0;			
+		List<Color> _colors = configuration.getClusterColors();
+		for(Cluster _cluster: _clusters) {
+			_cluster.setBaseColor(_colors.get(_index++%_colors.size()));
+		}
+		return _clusters;
 	}
 	
 	/**
@@ -124,15 +152,13 @@ public class Search {
 			Collection<eu.tilsner.cubansea.cluster.Cluster> _clusters = 
 				clusterAlgorithm.createClusters(_pres, config.getNumberOfClusters());
 			TopicGeneratorAlgorithm _topicAlgorithm = config.getTopicGeneratorAlgorithm();
-			int _index = 0;			
-			List<Color> _colors = config.getClusterColors();
 			for(eu.tilsner.cubansea.cluster.Cluster _cluster: _clusters) {
 				clusters.put(_cluster,new Cluster(_cluster, 
-												  _colors.get(_index++%_colors.size()), 
+												  null, 
 												  this, 
-												  _topicAlgorithm.generateTopic(_cluster)));
+												  _topicAlgorithm.generateTopic(_cluster,terms)));
 			}
-			guessResultCounts();
+			guessResultCounts();			
 		} catch (SearchEngineException e) {
 			throw new TechnicalError(e);
 		}
