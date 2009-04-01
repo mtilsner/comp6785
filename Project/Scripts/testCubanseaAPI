@@ -1,0 +1,23 @@
+import eu.tilsner.cubansea.api.*
+import eu.tilsner.cubansea.api.simple.*
+
+def terms = ["information","visualization"]
+
+def search = new Search(terms, new SimpleConfiguration())
+def clusters = search.getClusters()
+
+clusters.each { cluster ->
+    def index = 0
+    println "-------------------------------------CLUSTER----------------------------------"
+    while(true) {
+        try {
+            def results = cluster.getResults(index,1)
+            results.each { result ->
+                println "${result.getRank(cluster)}: ${result.getTitle()}"
+            }
+        } catch(Throwable t) {
+            break;
+        }
+        index += 25
+    }
+}

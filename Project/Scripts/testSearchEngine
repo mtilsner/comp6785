@@ -1,0 +1,26 @@
+public void performSearch(engine) {
+    def terms = new ArrayList<String>()
+    terms.add("information")
+    terms.add("visualization")
+
+    def initialLoadCount = 20
+    def search = engine.createSearch(terms, initialLoadCount)
+
+    search.getResults(0,9).each { result ->
+        println "${result.getRank()}: ${result.getTitle()} (${result.getURL()})"
+    }
+
+    println ""
+    println ""
+
+    def result = search.getResults(15,1).get(0)
+    println "Result #15: ${result.getTitle()}:"
+    println "'${result.getSummary()}'"
+    println "'${result.getContent()}'"
+    println "${result.getLinks()}"
+}
+
+//def engine = new eu.tilsner.cubansea.search.yahoo.YahooSearchEngine()
+def engine = new eu.tilsner.cubansea.search.google.GoogleSearchEngine()
+
+performSearch(engine)

@@ -1,0 +1,12 @@
+def config = Configuration.findByName("DEFAULT")
+config.clusteringAlgorithmClass=          eu.tilsner.cubansea.cluster.simplefuzzykmeans.SimpleFuzzyKMeansClusteringAlgorithm.class
+config.preparationAlgorithmClass=         eu.tilsner.cubansea.prepare.pottersummary.PotterSummaryPreparationAlgorithm.class
+config.topicGeneratorAlgorithmClass=      eu.tilsner.cubansea.topic.wordfrequency.WordFrequencyTopicGeneratorAlgorithm.class
+//config.searchEngineClass=                 java.lang.String
+config.searchEngineClass=                 eu.tilsner.cubansea.search.yahoo.YahooSearchEngine.class
+
+config.validate()
+config.errors.allErrors.each {
+        println it
+}
+config.save(flush:true)

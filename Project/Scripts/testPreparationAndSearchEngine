@@ -1,0 +1,18 @@
+def terms  = ["information","visualization"]
+def init   = 200
+
+def engine = new eu.tilsner.cubansea.search.yahoo.YahooSearchEngine()
+def search = engine.createSearch(terms, init)
+
+init = Math.min(search.getResultCount(), init)
+def sres   = search.getResults(0,init)
+
+def prep   = new eu.tilsner.cubansea.prepare.pottersummary.PotterSummaryPreparationAlgorithm()
+def pres   = prep.prepareResults(sres)
+
+pres.subList(0,10).each {result ->
+    println "${result.getSearchResult().getRank()}: ${result.getSearchResult().getTitle()}"
+    println result.getSearchResult().getSummary();
+    println result.getAllFrequencies()
+    println "--------------------------------------------------------";
+}

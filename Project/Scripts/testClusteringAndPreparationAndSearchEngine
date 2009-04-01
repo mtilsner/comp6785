@@ -1,0 +1,28 @@
+def terms  = ["java"]
+def init   = 200
+def numC   = 3
+
+def engine = new eu.tilsner.cubansea.search.yahoo.YahooSearchEngine()
+def search = engine.createSearch(terms, init)
+
+init = Math.min(search.getResultCount(), init)
+def sres   = search.getResults(0,init)
+
+def preA   = new eu.tilsner.cubansea.prepare.pottersummary.PotterSummaryPreparationAlgorithm()
+def pres   = preA.prepareResults(sres)
+
+def cluA   = new eu.tilsner.cubansea.cluster.simplefuzzykmeans.SimpleFuzzyKMeansClusteringAlgorithm()
+def clus   = cluA.createClusters(pres,numC);
+
+def exc    = []
+terms.each { term ->
+    exc << eu.tilsner.cubansea.utilities.StemmerHelper.stem(term)
+}
+
+clus.each {cluster ->
+    println "Next Cluster:"
+    cluster.getResults().eachWithIndex {result,index ->
+        println "${index+1}: (${result.getRelevance(cluster)} / ${result.getAbsoluteRelevance(cluster)}) ${result.getPreparedResult().getSearchResult().getTitle()}"
+    }
+    println "--------------------------------------------------------";
+}

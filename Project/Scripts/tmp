@@ -1,0 +1,95 @@
+import eu.tilsner.cubansea.prepare.PreparedResult
+
+def terms  = ["information","visualization"]
+def init   = 5
+def numC   = 4
+
+def engine = new eu.tilsner.cubansea.search.yahoo.YahooSearchEngine()
+def search = engine.createSearch(terms, init)
+
+init = Math.min(search.getResultCount(), init)
+def sres   = search.getResults(0,init)
+
+def preA   = new eu.tilsner.cubansea.prepare.pottersummary.PotterSummaryPreparationAlgorithm()
+def pres   = preA.prepareResults(sres)
+
+def initialize(def memberships, def items, def numberOfClusters) {
+    for(PreparedResult _item: items) {
+        memberships.put(_item, new HashMap<Integer,Double>());
+    }
+    def centroids = new HashMap<Integer,PreparedResult>();
+    for(int i=0;i<numberOfClusters;i++) {
+        centroids.put(i,items.get(i));
+    }
+    memberships = updateMemberships(memberships, centroids);
+    return memberships
+}
+
+def updateMemberships(def memberships, def centroids) {
+    Map<Integer,Double> _distances;
+    double _distanceSum;
+    double _distance;
+    double _membership;
+    for(PreparedResult _item: memberships.keySet()) {
+        _distances = new HashMap<Integer,Double>();
+        _distanceSum = 0.0;
+        for(Map.Entry<Integer,PreparedResult> _cluster: centroids.entrySet()) {
+            _distance = getEucledianDistance(_cluster.getValue(), _item);
+            _distances.put(_cluster.getKey(), _distance);
+            _distanceSum += _distance;
+        }
+        for(Integer _cluster: centroids.keySet()) {
+            _membership = 1- _distances.get(_cluster)/_distanceSum;
+            memberships.get(_item).put(_cluster, _membership);
+        }
+    }
+    return memberships
+}
+
+def getAllWords(Collection<PreparedResult> items) {
+    Collection<String> _words = new HashSet<String>();
+    for(PreparedResult _item: items) {
+        for(String _word: _item.getWords()) {
+            if(!_words.contains(_word)) _words.add(_word);
+        }
+    }
+    return _words;
+}
+
+def getEucledianDistance(PreparedResult item1, PreparedResult item2) {
+    double distance = 0.0;
+    Set<PreparedResult> items = new HashSet<PreparedResult>();
+    items.add(item1);
+    items.add(item2);
+    Collection<String> attributes = getAllWords(items);
+    for(String _attribute: attributes) {
+        distance += Math.pow(item1.getFrequency(_attribute) - item2.getFrequency(_attribute), 2);
+    }
+    return Math.sqrt(distance);
+}
+
+def memberships = new HashMap<PreparedResult,Map<Integer,Double>>();
+memberships = initialize(memberships, pres, Math.min(numC,pres.size()));
+
+def index = 0
+memberships.each {item,clusters ->
+    if(index < 10) {
+        println "${item.getSearchResult().getTitle()}:"
+        println "  ${clusters}"
+        index++;
+    }
+}
+
+return ""
+        
+
+def cluA   = new eu.tilsner.cubansea.cluster.simplefuzzykmeans.SimpleFuzzyKMeansClusteringAlgorithm()
+def clus   = cluA.createClusters(pres,numC);
+
+clus.each {cluster ->
+    println "Cluster '${cluster.getTopic()}' (${cluster.getResultCount()}):"
+    cluster.getResults(0, Math.min(10,cluster.getResultCount())).eachWithIndex {result,iindex ->
+        println "${iindex+1}: (${result.getRelevance(cluster)}) ${result.getPreparedResult().getSearchResult().getTitle()}"
+    }
+    println "--------------------------------------------------------";
+}

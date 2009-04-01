@@ -1,0 +1,104 @@
+import eu.tilsner.cubansea.search.*
+import eu.tilsner.cubansea.search.google.*
+import eu.tilsner.cubansea.search.yahoo.*
+
+def data = [
+    "searchTerms" : [
+          ["dot","com","bubble"],
+          ["real","estate","crisis"],
+          ["search","engine","benchmark"],
+          ["information","visualization"],
+          ["hommingberger","gepardenforelle"],
+          ["millenium","bug"],
+          ["cebit"],
+          ["java"],
+          ["jobs"]
+                    ],
+    "initLoads"      : [1,5,10,25,50,100,200,500,1000],
+    "iterations"     : 10,
+    "fileName"       : "test/reports/SearchEngineBenchmark"
+]
+    
+def writeStringToFile(def filename, def content) {
+    def writer=new File(filename).newWriter()
+    writer.writeLine(content)
+    writer.close
+}
+    
+def resultsToString(def resultMap) {
+    def s_xml=new StringWriter()
+    def xml = new groovy.xml.MarkupBuilder(s_xml)
+    def doc = xml.benchmark() {
+        resultMap.each {provider,loads ->
+            "${provider}"() {
+                loads.each {load,terms ->
+                    "${load}"() {
+                        terms.each {term,values ->
+                            "${term}"() {
+                                values.each {value ->
+                                    "${value}"(value)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return s_xml
+}
+    
+def performTests(def data) {
+    def results = [google:[:], yahoo:[:]]
+    data.initLoads.each { load ->
+        println "FETCHING ALWAYS THE FIRST ${load} ITEMS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        results.google["${load}"] = [:]
+        results.yahoo["${load}"]  = [:]
+        data.searchTerms.each { searchTerms ->
+            println "FETCHING ${searchTerms} >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+            results.google["${load}"][searchTerms] = [] 
+            results.yahoo["${load}"][searchTerms]  = [] 
+            1..(data.iterations).each {
+                def r = benchmark(searchTerms, load)
+                results.google["${load}"][searchTerms] << r.google
+                results.yahoo["${load}"][searchTerms]  << r.yahoo
+                println "${it}: ${r}"
+            }
+        }
+    }
+    return results
+}
+    
+def benchmark(def searchTerms, def initLoad) {
+    def result = [google:null,yahoo:null]
+    try {
+        def ystart  = new Date()
+        def yengine = new YahooSearchEngine()
+        def ysearch = yengine.createSearch(searchTerms, initLoad)
+        def yend    = new Date()
+        result.yahoo = yend - ystart
+    } catch(Throwable e) {
+        result.yahoo = "error"
+    }
+
+    try {
+        def gstart  = new Date()
+        def gengine = new GoogleSearchEngine()
+        def gsearch = gengine.createSearch(searchTerms, initLoad)
+        def gend    = new Date()
+        result.google = gend - gstart
+    } catch(Throwable e) {
+        result.google = "error"
+    }
+        
+    return result
+}
+
+def results = performTests(data)
+println results
+println "\n\n*************************************************************************************************************************************\n\n"
+
+def output  = resultsToString()
+println output
+
+writeStringToFile("${data.fileName}-${new Date()}.xml", output)
