@@ -1,0 +1,26 @@
+nobr {
+	display: block;
+}
+
+#search {
+	position: relative;
+	width: 524px;
+	height: 77px;
+	background: transparent url('../images/logo.png') no-repeat top center;
+	z-index: 2;
+}
+
+#searchField {
+	top: 20px;
+}
+
+#searchButton {
+	top: 18px;
+}
+
+#content {
+	position: relative;
+	width: 716px;
+	top: -30px;
+	z-index: 1;
+}

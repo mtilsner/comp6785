@@ -1,0 +1,25 @@
+#search {
+	position: relative;
+	width: 524px;
+	height: 260px;
+	background: transparent url('../images/startPanel.png') no-repeat top center;
+	z-index: 2;
+}
+
+#searchField {
+	top: 153px;
+}
+
+#searchButton {
+	top: 151px;
+}
+
+#messages {
+	position: absolute;
+	left: 50px;
+	top: 190px;
+	width: 424px;
+	height: 50px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}

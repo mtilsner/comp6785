@@ -3,12 +3,14 @@
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <title>:: CubanSea :: <g:layoutTitle default="Cluster-Based [En]visualization of Search Results" /></title>
-        <link rel="stylesheet" href="${createLinkTo(dir:'css',file:'main.css')}" />
+        <link rel="stylesheet" href="${createLinkTo(dir:'css',file:'cubanSea.css')}" />
         <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
+        <g:javascript library="scriptaculous" />				
         <g:layoutHead />
-        <g:javascript library="application" />				
     </head>
     <body>
-        <g:layoutBody />		
+    	<center id="center">
+			<g:layoutBody />
+		</center>
     </body>	
 </html>

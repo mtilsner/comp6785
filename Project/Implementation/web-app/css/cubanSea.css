@@ -1,0 +1,85 @@
+body {
+ 	background: url('../images/background.png');
+ 	margin: 0px;
+ 	font-family: verdana, arial, helvetica, sans-serif;
+ 	color: #333;
+}
+
+#searchField {
+	position: absolute;
+	left: 205px;
+	width: 198px;
+	height: 17px;
+	background: transparent url('../images/searchField.png') no-repeat center center;
+	padding: 5px 5px 4px 5px;
+	text-size: 19px;
+	border: 0px none transparent;
+}
+
+#searchButton {
+	position: absolute;
+	left: 424px;
+	width: 80px;
+	height: 31px;
+	background: transparent url('../images/searchButton.png') no-repeat center center;
+	border: 0px none transparent;
+	cursor: pointer;
+}
+
+.csFull {
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.csGlower {
+  border-collapse: collapse;
+  cell-spacing: 0px;
+  border: 0px none transparent;
+}
+
+.csGlower .csTop, .csGlower .csTop td, .csGlower .csBottom, .csGlower .csBottom td {
+  height: 15px;
+}
+
+.csGlower .csLeft, .csGlower .csRight {
+  width: 15px;
+}
+
+.csGlower .csMiddle .csLeft {
+  background: transparent url('../images/glow-w.png') repeat-y right;
+}
+
+.csGlower .csMiddle .csCenter {
+  background: transparent url('../images/glow-c.png') repeat;
+}
+
+.csGlower .csMiddle .csRight {
+  background: transparent url('../images/glow-e.png') repeat-y left;
+}
+
+.csGlower .csTop .csLeft {
+  background: transparent url('../images/glow-nw.png') no-repeat bottom right;
+}
+
+.csGlower .csTop .csCenter {
+  background: transparent url('../images/glow-n.png') repeat-x bottom;
+}
+
+.csGlower .csTop .csRight {
+  background: transparent url('../images/glow-ne.png') no-repeat bottom left;
+}
+
+.csGlower .csBottom .csLeft {
+  background: transparent url('../images/glow-sw.png') no-repeat top right;
+}
+
+.csGlower .csBottom .csCenter {
+  background: transparent url('../images/glow-s.png') repeat-x top;
+}
+
+.csGlower .csBottom .csRight {
+  background: transparent url('../images/glow-se.png') no-repeat top left;
+}

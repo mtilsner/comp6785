@@ -1,0 +1,107 @@
+.mac_os_x_content {
+	position: relative;
+	overflow: hidden !important;
+}
+
+.cluster_topbar {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 20px;
+	z-index: 2;
+	background: url('../images/clusterTopbarBackground.png') repeat-x center;
+	text-align: right;
+}
+
+.cluster_background {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	height: 450px;
+	z-index: 0;
+	background: url('../images/clusterBackground.png') repeat-x top;
+}
+
+.cluster_wrapper {
+}
+
+.cluster_scroll {
+	position: absolute;
+	top: 20px;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	z-index: 1;
+	overflow-x: auto;
+}
+
+.cluster_resultList {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	width: 100%;
+	-moz-column-width: 300px;
+	-moz-column-gap: 20px;
+	column-width: 300px;
+	column-gap: 20px;
+}
+
+.cluster_resultList .result {
+	margin-bottom: 8px;
+}
+
+.cluster_resultList .relevanceSquare {
+	position: relative;
+	width: 10px;
+	height: 10px;
+	border: 1px solid #666;
+	margin: 2px;
+	display: inline-block;
+	top: 3px;
+	cursor: pointer;
+}
+
+.cluster_resultList .relevanceSquare.collapsed {
+	background: url('../images/expand.png') no-repeat center center;
+}
+
+.cluster_resultList .relevanceSquare.expanded {
+	background: url('../images/collapse.png') no-repeat center center;
+}
+
+.cluster_resultList .resultHeader {
+	font-size: 13px;
+	color: #000
+}
+
+.cluster_resultList .resultSummary {
+	font-size: 11px;
+	padding-left: 20px;
+	color: #333;
+}
+
+.cluster_topbar .filter {
+	position: relative;
+	top: -3px;
+	border: 1px solid #999;
+	background: eee;
+	height: 12px;
+	font-size: 10px;
+	padding: 1px;
+	width: 100px;
+}
+
+.cluster_topbar .filter_message {
+	position: relative;
+	top: -3px;
+	font-size: 10px;
+	line-height: 10px;
+	margin-right: 2px;
+}
+
+.cluster_topbar .filter_summary_message {
+	margin-right: 6px;
+}

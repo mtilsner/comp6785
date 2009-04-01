@@ -1,14 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>welcome to Cuban Sea</title>
-  </head>
-  <body>
-  	<g:form name="search" url="[action:'index']" method="GET">
-  		<g:textField name="q" value="${q}" />
-  		<g:submitButton name="search" value="search" />
-  	</g:form>
-  </body>
+	<head>
+		<meta name="layout" content="main" />
+		<title>fine grained search control</title>
+        <link rel="stylesheet" href="${createLinkTo(dir:'css',file:'portal.css')}" />
+	</head>
+	<body>
+		<div id="search">
+			<form method="get">
+				<input type="text" id="searchField" name="q" value="${q}" />
+				<input type="submit" id="searchButton" value="" />
+			</form>
+			<div id="messages"></div>
+		</div>
+	</body>
 </html>

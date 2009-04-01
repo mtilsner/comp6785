@@ -1,0 +1,67 @@
+.progressWrapper {
+	position: relative;
+	height: 25px;
+}
+
+.progressWrapper_left {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 15px;
+	height: 25px;
+	background: transparent url('../images/progressbar/background-left.png') no-repeat right center;
+	z-index: 1;
+}
+
+.progressWrapper_center {
+	position: absolute;
+	left: 15px;
+	top: 0px;
+	right: 15px;
+	height: 25px;
+	background: transparent url('../images/progressbar/background-center.png') repeat-x center;
+	z-index: 2;
+}
+
+.progressWrapper_right {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 15px;
+	height: 25px;
+	background: transparent url('../images/progressbar/background-right.png') no-repeat left center;
+	z-index: 1;
+}
+
+.progressBar_wrapper {
+	position: absolute;
+	top: 4px;
+	height: 17px;
+}
+
+.progressBar_left {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 10px;
+	height: 17px;
+	background: transparent url('../images/progressbar/bar-left.png') no-repeat right center;
+}
+
+.progressBar_center {
+	position: absolute;
+	left: 10px;
+	top: 0px;
+	right: 10px;
+	height: 17px;
+	background: transparent url('../images/progressbar/bar-center.png') repeat-x center;
+}
+
+.progressBar_right {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 10px;
+	height: 17px;
+	background: transparent url('../images/progressbar/bar-right.png') no-repeat left center;
+}

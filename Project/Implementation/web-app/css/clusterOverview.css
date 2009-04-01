@@ -1,0 +1,104 @@
+.clusterOverview {
+	position: relative;
+	width: 312px;
+	height: 212px;
+	float: left;
+	margin: 8px 14px;
+}
+
+.clusterOverview table .middle .center {
+	width: 282px;
+	height: 182px;
+}
+
+.clusterOverview_background {
+	position: absolute;
+	top: -100px;
+	left: -10px;
+	width: 296px;
+	height: 200px;
+	background-image: url('../images/clusterOverviewBackground.png');
+} 
+
+.clusterOverview_topic {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 280px;
+	height: 40px;
+	text-align: center;
+}
+
+.clusterOverview_results {
+	position: absolute;
+	top: 54px;
+	left: 4px;
+	width: 288px;
+	height: 142px;		
+}
+
+.clusterOverview_results table .middle .center {
+	width: 258px;
+	height: 112px;
+}
+
+.clusterOverview_results_background {
+	position: absolute;
+	top: -65px;
+	left: -10px;
+	width: 262px;
+	height: 120px;
+	z-index: 0;
+}
+
+.clusterOverview_results_fader {
+	position: absolute;
+	top: -65px;
+	left: -10px;
+	width: 272px;
+	height: 130px;
+	z-index: 1;
+	background: #fff;
+	opacity: 0.7;
+}
+
+.clusterOverview_results_content {
+	position: absolute;
+	top: -65px;
+	left: -10px;
+	width: 272px;
+	height: 130px;
+	-moz-column-count: 2;
+	-moz-column-gap: 10px;
+	column-count: 2;
+	column-gap: 10px;
+	font-size: 10px;
+	padding: 5px;
+	z-index: 2;
+	overflow: hidden;
+}
+.clusterOverview .relevanceSquare {
+	position: relative;
+	width: 6px;
+	height: 6px;
+	border: 1px solid #666;
+	margin: 2px;
+	display: inline-block;
+	top: 3px;
+}
+
+.clusterOverview .detailsFader {
+	position: absolute;
+	top: 6px;
+	left: 8px;
+	width: 296px;
+	height: 200px;
+	background: transparent url('../images/detailsFader.png') no-repeat center center;
+	z-index: 5;
+	visibility: hidden;
+	cursor: pointer;
+}
+
+.clusterOverview:hover .detailsFader {
+	visibility: visible;
+}
