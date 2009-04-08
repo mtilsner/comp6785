@@ -53,7 +53,7 @@ public class YahooSearchResult implements SearchResult {
 	 * @see eu.tilsner.cubansea.search.Result#getLinks()
 	 */
 	@Override
-	public Set<URL> getLinks() throws SearchResultException {
+	public Set<String> getLinks() throws SearchResultException {
 		return HTMLHelper.extractLinks(getContent());
 	}
 

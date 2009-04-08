@@ -8,6 +8,7 @@ import java.util.Map;
 import eu.tilsner.cubansea.prepare.PreparationAlgorithm;
 import eu.tilsner.cubansea.prepare.PreparedResult;
 import eu.tilsner.cubansea.search.SearchResult;
+import eu.tilsner.cubansea.search.SearchResultException;
 import eu.tilsner.cubansea.utilities.StemmerHelper;
 import eu.tilsner.cubansea.utilities.StringHelper;
 
@@ -40,7 +41,14 @@ public class PotterSummaryPreparationAlgorithm implements PreparationAlgorithm {
 	 * @return The prepared result wrapping the search result.
 	 */
 	private PreparedResult createPreparedResult(SearchResult result) {
-		Map<String,Double> _frequencies = calculateWordFrequencies(result.getSummary());
+		String _content =   	  StringHelper.join(StringHelper.multiply(result.getTitle(), 1), " ")
+						  + " " + StringHelper.join(StringHelper.multiply(result.getSummary(), 1), " ");
+/*		try {
+			_content += " " + result.getURL().toString();
+		} catch(SearchResultException e) {}*/
+		_content = result.getTitle() + " " + result.getSummary();
+		_content = result.getSummary();
+		Map<String,Double> _frequencies = calculateWordFrequencies(_content);
 		return new PotterSummaryPreparedResult(result, _frequencies);
 	}
 	

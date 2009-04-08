@@ -27,7 +27,7 @@ public interface PreparedResult {
 	 */
 	public static final List<String> IGNORED_WORDS = Arrays.<String>asList(
 		"therefor", "thus", "hence", "because", "since", "consequently", "however", "though", "while", "until", 
-		"from", "need", "such", "what", "with", "that"
+		"from", "need", "such", "what", "with", "that", "your", "about"
 	);
 	
 	/**
@@ -65,4 +65,11 @@ public interface PreparedResult {
 	 * @return A map of the frequencies.
 	 */
 	public Map<String,Double> getAllFrequencies();
+	
+	/**
+	 * Sets the frequencies to those of a provided prepared result. 
+	 * 
+	 * @param _base
+	 */
+	public void setAllFrequencies(PreparedResult _base);
 }

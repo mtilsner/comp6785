@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="mtilsner-laptop" name="HTMLHelperTests" tests="2" time="0.916" timestamp="2009-04-06T21:22:58">
+  <properties />
+  <testcase classname="HTMLHelperTests" name="testDocumentFetch" time="0.892" />
+  <testcase classname="HTMLHelperTests" name="testLinkExtract" time="0.024" />
+  <system-out><![CDATA[--Output from testDocumentFetch--
+--Output from testLinkExtract--
+]]></system-out>
+  <system-err><![CDATA[--Output from testDocumentFetch--
+--Output from testLinkExtract--
+]]></system-err>
+</testsuite>

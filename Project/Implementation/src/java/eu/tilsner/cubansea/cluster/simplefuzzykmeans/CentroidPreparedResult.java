@@ -59,4 +59,12 @@ public class CentroidPreparedResult implements PreparedResult {
 		return attributes;
 	}
 
+	/* (non-Javadoc)
+	 * @see eu.tilsner.cubansea.prepare.PreparedResult#setAllFrequencies(eu.tilsner.cubansea.prepare.PreparedResult)
+	 */
+	@Override
+	public void setAllFrequencies(PreparedResult _base) {
+		attributes = _base.getAllFrequencies();
+	}
+
 }

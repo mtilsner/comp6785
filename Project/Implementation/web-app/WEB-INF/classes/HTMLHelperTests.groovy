@@ -13,22 +13,21 @@ class HTMLHelperTests extends GrailsUnitTestCase {
 
     void testDocumentFetch() {
     	def expectedDocument = """This is a test file
-<a href="www.amazon.de">Amazon</a>
-"""
+<a href="www.amazon.de">Amazon</a>"""
+		def foundDocument = HTMLHelper.fetchDocument(new URL("http://www.limeweb.eu/~matthias.tilsner/webTestFile"))    	
 
-		def foundDocument = HTMLHelper.fetchDocument("http://www.limeweb.de/~matthias.tilsner/webTestFile")
-    	
-		assert expectedDocument == foundDocument
+		assertEquals expectedDocument.trim(), foundDocument.trim()
     }
 
     void testLinkExtract() {
 		def expectedLinks = ["http://www.google.com/",
 		                     "http://www.yahoo.com",
-		                     "index.php?hello"]
+		                     "index.php"]
 
 		def foundLinks = HTMLHelper.extractLinks("""<html>
-				  <link href="doNotShowUp" />
-				  </html>
+				  <head>
+				    <link href="doNotShowUp" />
+				  </head>
 				  <body>
 				    This is a test document containing a link to
 				    <a href="http://www.google.com/">Google</a>
@@ -39,8 +38,9 @@ class HTMLHelperTests extends GrailsUnitTestCase {
 				      <form action="index.php?hello">
 				      </form>
 				    </div>
-				  </body>""")
+				  </body>
+</html>""")
 		
-		assert expectedLinks.sort() == foundLinks.sort()
+		assertEquals expectedLinks.sort(), foundLinks.sort()
     }
 }

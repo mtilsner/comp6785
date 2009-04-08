@@ -1,0 +1,10 @@
+Testsuite: CubanSeaTagLibTests
+Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0,663 sec
+------------- Standard Output ---------------
+--Output from testTermHighlighter--
+------------- ---------------- ---------------
+------------- Standard Error -----------------
+--Output from testTermHighlighter--
+------------- ---------------- ---------------
+
+Testcase: testTermHighlighter took 0,662 sec

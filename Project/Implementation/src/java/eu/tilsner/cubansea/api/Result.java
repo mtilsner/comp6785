@@ -50,7 +50,8 @@ public class Result {
 	public Color getColor(Cluster cluster) {
 		Color baseRGB = cluster.getBaseColor();
 		float[] baseHSB = Color.RGBtoHSB(baseRGB.getRed(), baseRGB.getGreen(), baseRGB.getBlue(), null);
-		baseHSB[1] *= Math.pow(Math.min(1.0, getRelevance(cluster)),2);
+		baseHSB[1] *= Math.pow(getRelevance(cluster),2);
+		baseHSB[2] += (1-baseHSB[2])*Math.pow(1.0-getRelevance(cluster),2);
 		return Color.getHSBColor(baseHSB[0], baseHSB[1], baseHSB[2]);
 	}
 
@@ -93,7 +94,7 @@ public class Result {
      * 
      * @return List of URLs of documents linked to by this document
      */
-	public Set<URL> getLinks() {
+	public Set<String> getLinks() {
 		try {
 			return result.getPreparedResult().getSearchResult().getLinks();
 		} catch (SearchResultException e) {

@@ -20,7 +20,9 @@ environments {
 	test {
 		dataSource {
 			dbCreate = "update"
-			url = "jdbc:hsqldb:mem:testDb"
+			url = "jdbc:mysql://www.tilsner.eu:3306/cubansea_development?autoReconnect=true"
+			username = "cubansea-admin"
+			password = "infoViz"
 		}
 	}
 	production {

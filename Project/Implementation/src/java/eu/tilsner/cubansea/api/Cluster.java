@@ -3,11 +3,11 @@ package eu.tilsner.cubansea.api;
 import java.awt.Color;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import eu.tilsner.cubansea.cluster.ClusteredResult;
 
 /**

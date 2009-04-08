@@ -49,7 +49,7 @@ public class SimpleFuzzyKMeansCluster implements Cluster {
 	 */
 	@Override
 	public double getMaximumRelevance() {
-		return results.get(0).getAbsoluteRelevance(this);
+		return (results.size() == 0) ? 1.0 : results.get(0).getAbsoluteRelevance(this);
 	}
 
 	/**

@@ -12,6 +12,8 @@ import eu.tilsner.cubansea.cluster.ClusteredResult;
 import eu.tilsner.cubansea.cluster.ClusteringAlgorithm;
 import eu.tilsner.cubansea.prepare.PreparedResult;
 
+import org.apache.log4j.Logger;
+
 /**
  * Simple implementation of a fuzzy k-means clustering algorithm as presented
  * by (Bezdek, 1981). This implementation is not performance optimized, but
@@ -21,8 +23,10 @@ import eu.tilsner.cubansea.prepare.PreparedResult;
  */
 public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm {
 
+	static Logger logger = Logger.getLogger(SimpleFuzzyKMeansClusteringAlgorithm.class.getName());
+	
 	private static final int MAXIMUM_ITERATIONS 		   = 250;
-	private static final double MINUMUM_ITERATION_PROGRESS = 0.5;
+	private static final double MINUMUM_ITERATION_PROGRESS = 0.001;
 	private static final double FUZZYFIER				   = 1.5;
 	
 	private Map<PreparedResult,Map<Integer,Double>> oldMemberships;
@@ -44,6 +48,7 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 			Cluster _cluster = new SimpleFuzzyKMeansCluster(null, _centroid.getValue());
 			_clusters.add(_cluster);
 		}
+		_clusters = processClusterBase(_clusters);
 		for(PreparedResult _item: items) {
 			_clusters = addItemToClusters(_clusters, _item);
 		}
@@ -53,6 +58,17 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 		return _clusters;
 	}
 
+	/**
+	 * Small helper function that allows the preprocessing of clusters before adding the
+	 * results to them.
+	 * 
+	 * @param _clusters The original cluster base.
+	 * @return The resulting cluster base.
+	 */
+	protected Collection<Cluster> processClusterBase(Collection<Cluster> _clusters) {
+		return _clusters;
+	}
+	
 	/**
 	 * Initializes the search algorithm. The first centroids are defined
 	 * and the starting memberships calculated.
@@ -91,10 +107,17 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	 * Performs an iteration step.
 	 */
 	private void iterate() {
-		oldMemberships = memberships;
+		Map<Integer,Double> _mems;
+		oldMemberships = new HashMap<PreparedResult,Map<Integer,Double>>();
+		for(PreparedResult _result: memberships.keySet()) {
+			_mems = new HashMap<Integer,Double>();
+			_mems.putAll(memberships.get(_result));
+			oldMemberships.put(_result, _mems);
+		}
 		updateCentroids();
 		updateMemberships();
 		iterations++;
+		logger.debug("performed iteration "+iterations+": change so far was "+getEucledianDistance(memberships,oldMemberships));
 	}
 	
 	/**
@@ -122,7 +145,7 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 		Map<PreparedResult,Double> _distances = new HashMap<PreparedResult,Double>();
 		for(PreparedResult _cluster: centroids) {
 			_distances.put(_cluster, Math.max(getEucledianDistance(_cluster, item),0.0000000001));
-			_distances.put(_cluster, getEucledianDistance(_cluster, item));
+			//_distances.put(_cluster, getEucledianDistance(_cluster, item));
 		}
 
 		Map<PreparedResult,Double> _memberships = new HashMap<PreparedResult,Double>();
@@ -143,7 +166,7 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	 */
 	private void updateCentroids() {
 		Map<String,Double> _centroid;
-		double			   _membership;
+		Double			   _membership;
 		double			   _membershipSum;
 		for(Integer _cluster: centroids.keySet()) {
 			_centroid = new HashMap<String,Double>();
@@ -196,7 +219,7 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	 * @param item2 Second item for comparison.
 	 * @return Eucledian distance between the two items.
 	 */
-	private double getEucledianDistance(PreparedResult item1, PreparedResult item2) {
+	protected double getEucledianDistance(PreparedResult item1, PreparedResult item2) {
 		double distance = 0.0;
 		Set<PreparedResult> items = new HashSet<PreparedResult>();
 		items.add(item1);
@@ -214,7 +237,7 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	 * @param items Items from which the words shall be taken.
 	 * @return Union of all occurring word sets.
 	 */
-	private static Collection<String> getAllWords(Collection<PreparedResult> items) {
+	protected static Collection<String> getAllWords(Collection<PreparedResult> items) {
 		Collection<String> _words = new HashSet<String>();
 		for(PreparedResult _item: items) {
 			for(String _word: _item.getWords()) {
@@ -294,5 +317,13 @@ public class SimpleFuzzyKMeansClusteringAlgorithm implements ClusteringAlgorithm
 	 */
 	public SimpleFuzzyKMeansClusteringAlgorithm(double _sensitivity) {
 		sensitivity = _sensitivity;		
+	}
+	
+	public Map<PreparedResult,Map<Integer,Double>> getMemberships() {
+		return memberships;
+	}
+	
+	public Map<Integer,PreparedResult> getCentroids() {
+		return centroids;
 	}
 }

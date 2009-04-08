@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="1" hostname="mtilsner-laptop" name="PotterSummaryPreparationAlgorithmTests" tests="1" time="0.421" timestamp="2009-04-06T21:22:59">
+  <properties />
+  <testcase classname="PotterSummaryPreparationAlgorithmTests" name="testSomething" time="0.421">
+    <failure message="expected:&lt;{banana=2.0, beauti=1.0, costa=1.0, republ=1.0, rica=1.0, island=1.0}&gt; but was:&lt;{banana=2.0, beauti=1.0, costa=1.0, republ=1.0, rica=1.0, island=1.0}&gt;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: expected:&lt;{banana=2.0, beauti=1.0, costa=1.0, republ=1.0, rica=1.0, island=1.0}&gt; but was:&lt;{banana=2.0, beauti=1.0, costa=1.0, republ=1.0, rica=1.0, island=1.0}&gt;
+	at PotterSummaryPreparationAlgorithmTests$_testSomething_closure8.doCall(PotterSummaryPreparationAlgorithmTests.groovy:50)
+	at PotterSummaryPreparationAlgorithmTests.testSomething(PotterSummaryPreparationAlgorithmTests.groovy:49)
+	at _GrailsTest_groovy$_run_closure4.doCall(_GrailsTest_groovy:202)
+	at _GrailsTest_groovy$_run_closure2.doCall(_GrailsTest_groovy:146)
+	at _GrailsTest_groovy$_run_closure1_closure19.doCall(_GrailsTest_groovy:112)
+	at _GrailsTest_groovy$_run_closure1.doCall(_GrailsTest_groovy:95)
+	at TestApp$_run_closure1.doCall(TestApp.groovy:66)
+	at gant.Gant$_dispatch_closure4.doCall(Gant.groovy:324)
+	at gant.Gant$_dispatch_closure6.doCall(Gant.groovy:334)
+	at gant.Gant$_dispatch_closure6.doCall(Gant.groovy)
+	at gant.Gant.withBuildListeners(Gant.groovy:344)
+	at gant.Gant.this$2$withBuildListeners(Gant.groovy)
+	at gant.Gant$this$2$withBuildListeners.callCurrent(Unknown Source)
+	at gant.Gant.dispatch(Gant.groovy:334)
+	at gant.Gant.this$2$dispatch(Gant.groovy)
+	at gant.Gant.invokeMethod(Gant.groovy)
+	at gant.Gant.processTargets(Gant.groovy:495)
+	at gant.Gant.processTargets(Gant.groovy:480)
+</failure>
+  </testcase>
+  <system-out><![CDATA[--Output from testSomething--
+]]></system-out>
+  <system-err><![CDATA[--Output from testSomething--
+]]></system-err>
+</testsuite>

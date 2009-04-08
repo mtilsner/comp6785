@@ -1,3 +1,5 @@
+import java.util.concurrent.Semaphore;
+
 import eu.tilsner.cubansea.api.NoMoreResultsException
 import eu.tilsner.cubansea.utilities.TechnicalError
 
@@ -6,6 +8,7 @@ class SearchController {
 	SearchService searchService
 	
 	def next = {
+		session["current"]["lock"].acquire()
 		try {
 			render(contentType:'text/json') {
 				searchService.next(session["current"]["search"]).each {key,value ->
@@ -26,11 +29,14 @@ class SearchController {
 				message(status:"retry")
 			}
 		}
+		session["current"]["lock"].release()
 	}
 	
 	def cluster = {
+		session["current"]["lock"].acquire()
 		def cluster = searchService.cluster(session["current"]["search"],params.cluster)
-		render(template: "cluster", model: ['cluster':cluster], terms: session["current"]["terms"])
+		render(template: "cluster", model: ['cluster':cluster, terms: session["current"]["terms"]])
+		session["current"]["lock"].release()
 	}
 	
     def index = {
@@ -41,6 +47,7 @@ class SearchController {
     				session["search"][params.q] = [:]
     				session["search"][params.q]["terms"]  = searchService.terms(params.q)
     				session["search"][params.q]["search"] = searchService.search(session["search"][params.q]["terms"])
+    				session["search"][params.q]["lock"]	  = new Semaphore(1)
     			} catch(Throwable e) {
     				session["search"][params.q] = null
     				throw e
@@ -48,10 +55,12 @@ class SearchController {
         	}
     		session["current"] 	= session["search"][params.q]
     	}
-    	if(session["current"])
+    	if(session["current"]) {
+    		session["current"]["lock"].acquire()
     		render(view: "search", model: [q: params.q, terms: session["current"]["terms"],
     		                               clusters: session["current"]["search"].clusters])
-        else
+           	session["current"]["lock"].release()
+    	} else
     		render(view: "portal",model: [q: params.q])
     }
 }

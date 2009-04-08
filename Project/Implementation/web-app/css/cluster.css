@@ -53,14 +53,25 @@
 	margin-bottom: 8px;
 }
 
+.cluster_resultList .relevanceSquare_Background {
+	position: relative;
+	width: 10px;
+	height: 10px;
+	margin: 2px;
+	display: inline-block;
+	top: 3px;
+}
+
 .cluster_resultList .relevanceSquare {
 	position: relative;
 	width: 10px;
 	height: 10px;
+	left: -18px;
+	top: 4px;
 	border: 1px solid #666;
-	margin: 2px;
+	backgroud-color: #fff;
+	margin: 2px -14px 2px 2px;
 	display: inline-block;
-	top: 3px;
 	cursor: pointer;
 }
 

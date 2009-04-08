@@ -92,10 +92,10 @@ public class Search {
 				_assignments.get(clusters.get(_cluster)).add(new Result(_result));
 			}
 		}
-/*		for(Map.Entry<Cluster,List<Result>> _entry: _assignments.entrySet()) {
+		for(Map.Entry<Cluster,List<Result>> _entry: _assignments.entrySet()) {
 			_entry.getKey().addResults(_entry.getValue());
 		}
-		guessResultCounts();*/
+		//guessResultCounts();
 		return _assignments;
 	}
 	

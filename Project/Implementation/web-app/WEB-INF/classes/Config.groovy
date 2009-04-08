@@ -60,6 +60,11 @@ log4j = {
 	       'org.hibernate'
 
     warn   'org.mortbay.log'
+    
+    debug  'eu.tilsner.cubansea',
+    	   'eu.tilsner.cubansea.cluster'
+//    	   'eu.tilsner.cubansea.cluster.simplefuzzykmeans'
+    	   
 }
 
 

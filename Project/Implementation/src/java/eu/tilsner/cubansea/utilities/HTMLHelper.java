@@ -1,7 +1,6 @@
 package eu.tilsner.cubansea.utilities;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,21 +65,17 @@ public class HTMLHelper {
 	 * @param document The document content
 	 * @return A set of all URLs linked to in this document.
 	 */
-	public static Set<URL> extractLinks(String document) {
-		Set<URL> _links = new HashSet<URL>();
-		Pattern _linkPattern = Pattern.compile("<a[^>]*href=\"([^\"]+)\"",Pattern.CASE_INSENSITIVE);
+	public static Set<String> extractLinks(String document) {
+		Set<String> _links = new HashSet<String>();
+		Pattern _linkPattern = Pattern.compile("<a[^>]*href=\"([^\";?]+)",Pattern.CASE_INSENSITIVE);
 			Matcher _linkMatcher = _linkPattern.matcher(document);
 			while(_linkMatcher.find()) {
-				try {
-					_links.add(new URL(_linkMatcher.group(1)));
-				} catch (MalformedURLException e) {	}
+				_links.add(_linkMatcher.group(1));
 			}
-		Pattern _formPattern = Pattern.compile("<form[^>]*action=\"([^\"]+)\"",Pattern.CASE_INSENSITIVE);
+		Pattern _formPattern = Pattern.compile("<form[^>]*action=\"([^\";?]+)",Pattern.CASE_INSENSITIVE);
 		 	Matcher _formMatcher = _formPattern.matcher(document);
 		 	while(_formMatcher.find()) {
-		 		try {
-					_links.add(new URL(_formMatcher.group(1)));
-				} catch (MalformedURLException e) { }
+				_links.add(_formMatcher.group(1));
 		 	}
 		return _links;
 	}

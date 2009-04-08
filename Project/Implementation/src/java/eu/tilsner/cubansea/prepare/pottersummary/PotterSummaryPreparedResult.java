@@ -64,4 +64,12 @@ public class PotterSummaryPreparedResult implements PreparedResult {
 	public Map<String, Double> getAllFrequencies() {
 		return wordFrequencies;
 	}
+
+	/* (non-Javadoc)
+	 * @see eu.tilsner.cubansea.prepare.PreparedResult#setAllFrequencies(eu.tilsner.cubansea.prepare.PreparedResult)
+	 */
+	@Override
+	public void setAllFrequencies(PreparedResult _base) {
+		wordFrequencies = _base.getAllFrequencies();
+	}
 }

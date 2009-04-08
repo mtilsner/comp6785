@@ -60,5 +60,5 @@ public interface SearchResult {
      * @return List of URLs of documents linked to by this document
      * @throws SearchResultException The document might not be available and retrieval might fail.
      */
-    public Set<URL> getLinks() throws SearchResultException;
+    public Set<String> getLinks() throws SearchResultException;
 }

@@ -1,10 +1,15 @@
 import java.awt.Color
+
 import eu.tilsner.cubansea.utilities.StemmerHelper
 import eu.tilsner.cubansea.utilities.StringHelper
 import eu.tilsner.cubansea.prepare.PreparedResult
 
+import org.apache.log4j.Logger;
+
 class CubanSeaTagLib {
 	static namespace = "cs"
+
+	static Logger logger = Logger.getLogger(CubanSeaTagLib.class.getName());	
 	
 	def wordCutter = {attrs ->
 		if(!attrs?.content) throw new Exception("Missing attribute: 'content' required!")
@@ -51,15 +56,15 @@ class CubanSeaTagLib {
 		if(attrs.content == null) {
 			out << ""
 		} else {
-			def stems = attrs.terms.collect { StemmerHelper.stem(it).toLowerCase() }
-			def content = attrs.content.replaceAll(PreparedResult.INVALID_CHARACTER_PATTERN, " ");
+			def stems = attrs.terms?.toList().collect { StemmerHelper.stem(it).toLowerCase() }
+			def content = attrs.content?.replaceAll(PreparedResult.INVALID_CHARACTER_PATTERN, " ");
 			content = content.replaceAll("\\s+", " ")
 			def words = StringHelper.split(content, " ")
 			def result = attrs.content
 			words.each {word ->
 				if(stems.contains(StemmerHelper.stem(word.toLowerCase()))) {
 					result = result.replaceAll(word, "<b>${word}</b>")
-				}
+				} 
 			}
 			out << result
 		}
