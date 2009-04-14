@@ -13,16 +13,33 @@ def pres   = preA.prepareResults(sres)
 
 def cluA   = new eu.tilsner.cubansea.cluster.simplefuzzykmeans.SimpleFuzzyKMeansClusteringAlgorithm()
 def clus   = cluA.createClusters(pres,numC);
-
+/*
 def exc    = []
 terms.each { term ->
     exc << eu.tilsner.cubansea.utilities.StemmerHelper.stem(term)
 }
-
+*/
 clus.each {cluster ->
     println "Next Cluster:"
+   
     cluster.getResults().eachWithIndex {result,index ->
         println "${index+1}: (${result.getRelevance(cluster)} / ${result.getAbsoluteRelevance(cluster)}) ${result.getPreparedResult().getSearchResult().getTitle()}"
     }
     println "--------------------------------------------------------";
 }
+/*
+cluA.memberships.each { item,memberships ->
+    println "${item.searchResult.title}: "
+    memberships.each { cluster,membership ->
+        println "  ${cluster}    : ${membership}"
+    }
+}
+
+cluA.centroids.each { cluster,centroid ->
+    println "${cluster}: "
+    centroid.allFrequencies.each { word,occurences ->
+        if(occurences == Double.NaN) println " ohoh "
+        else println "  ${word}    : ${occurences}"
+    }
+}*/
+return "."

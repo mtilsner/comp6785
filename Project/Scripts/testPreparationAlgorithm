@@ -1,0 +1,41 @@
+import eu.tilsner.cubansea.prepare.pottersummary.PotterSummaryPreparationAlgorithm
+import eu.tilsner.cubansea.search.SearchResult
+import eu.tilsner.cubansea.utilities.StemmerHelper
+
+        def pages = [
+           [rank: 1, url: null, content: null, links: [],
+            getTitle: {"Wikipedia: Banana Republic"},
+            getSummary: {"""
+                beautiful republic of Banana 
+                Banana island costa rica
+            """}] as SearchResult,
+            [rank: 9, url: null, content: null, links: [],
+             getTitle: {"Harvesting Bananas"},
+             getSummary: {"""
+                  banana harvest south america
+                  taste golden
+             """}] as SearchResult
+           ]
+        def expected = [
+           [(StemmerHelper.stem("beautiful")):1,
+            (StemmerHelper.stem("republic")):1,
+            (StemmerHelper.stem("banana")):2,
+            (StemmerHelper.stem("island")):1,
+            (StemmerHelper.stem("costa")):1,
+            (StemmerHelper.stem("rica")):1],
+           [(StemmerHelper.stem("banana")):1,
+            (StemmerHelper.stem("harvest")):1,
+            (StemmerHelper.stem("south")):1,
+            (StemmerHelper.stem("america")):1,
+            (StemmerHelper.stem("taste")):1,
+            (StemmerHelper.stem("golden")):1]
+        ]
+        def algorithm = new PotterSummaryPreparationAlgorithm()
+        def results   = algorithm.prepareResults(pages)
+
+println expected
+
+results.each { result ->
+    println result.getAllFrequencies()
+    println expected.contains(result.getAllFrequencies())
+}
