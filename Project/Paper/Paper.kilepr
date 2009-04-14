@@ -80,7 +80,7 @@ order=3
 
 [item:sections/evaluation.tex]
 archive=true
-column=337
+column=249
 encoding=UTF-8
 highlight=LaTeX
 line=20
